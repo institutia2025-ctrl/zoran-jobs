@@ -1,0 +1,38 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_calcul_vent_ec1", "name": "Calcul pression vent EC1-1-4",
+               "version": "1.0.0", "hash": "sha256:e8af1e43e3a73136b1d245ff0ce364a304c9f0a5a23e4d0b6ebc48a411a5b113", "signature": "demo-sig-vent-ec1",
+               "author": "Sonnet Phase B Struct 2/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object"}, "outputs": {"type": "object"}},
+  "routing": {"domain": "structure",
+              "triggers": ["vent", "pression vent", "ec1", "eurocode 1", "qp", "ce(z)", "region vent"],
+              "description": "Pression vent reglementaire EC1-1-4 §4 + NA France (4 regions, 5 categories terrain)."},
+  "coherence": {"expected_delta_phi": 0.90, "expected_T_added": 0.03, "expected_sigma_added": 0.05, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.85, "expected_T_added": 0.03, "expected_sigma_added": 0.03, "weight": 0.30},
+    "structure":    {"expected_delta_phi": 0.92, "expected_T_added": 0.03, "expected_sigma_added": 0.05, "weight": 0.35},
+    "cout":         {"expected_delta_phi": 0.55, "expected_T_added": 0.05, "expected_sigma_added": 0.00, "weight": 0.15},
+    "maintenance":  {"expected_delta_phi": 0.40, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.50, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Re-evaluation carte des vents France (CSTB observations + reanalyse cycloniques)",
+     "probabilite": 0.65, "gravite": "moyenne", "reference": "CSTB veille climatologique + cycle revision NA EC1"},
+    {"horizon_an": 50, "evenement": "Adaptation aux evenements climatiques extremes (refonte regions)",
+     "probabilite": 0.75, "gravite": "moyenne", "reference": "GIEC + Meteo-France projections vents 2070"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "MVP : c_dir = c_season = 1.0 (conservatif). En production : appliquer §4.2(2)P NA pour reduction selon direction et saison.",
+    "c_e(z) interpole sur 4 points par categorie (Figure 4.2 NA). Pour calcul exact, utiliser formule §4.5(1) avec c_o, k_r, z_0.",
+    "Pas de prise en compte : effets de relief (§4.3.3), pression sur les bords (§5.3 et A.4 NA), tourbillons (§7.13).",
+    "Ne couvre PAS les structures elancees (mats, cheminees > 200m, eoliennes) - calcul aeroelastique requis (§E EC1).",
+    "Hauteur z = hauteur de reference (typiquement h batiment). Pour z_e par face exposee, voir §7.2.2.",
+    "Ouvrages exceptionnels (ponts a haubans, grandes coupoles) : essai en soufflerie obligatoire (§7.13 EC1)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

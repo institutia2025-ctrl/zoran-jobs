@@ -2,6 +2,45 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.8.0-phase-b-sonnet-structure-avancee] — 2026-05-21
+
+### Ajouté — 5 skills Phase B Structure avancée (qualité maxi, S > 0.7 partout)
+
+Catalogue Eurocode avancé en V2 strict (multi-cadres + futur probable + veto + limites) :
+
+| skill_id | Référence Eurocode | Note /20 | S_V1 | S_global |
+|---|---|---|---|---|
+| `btp_calcul_sismique_ec8` | NF EN 1998-1 §4.3.3.2 + §3.2.2.5 + NA + zones France | 18/20 | 0.852 | 0.760 |
+| `btp_calcul_vent_ec1` | NF EN 1991-1-4 §4 + NA (4 régions, 5 catégories terrain) | 18/20 | 0.833 | 0.703 |
+| `btp_verif_cisaillement_poutre_ec2` | NF EN 1992-1-1 §6.2.2 + §6.2.3 (V_Rd,c + V_Rd,s + V_Rd,max) | 19/20 | 0.833 | 0.747 |
+| `btp_verif_fleche_detaillee_ec2` | NF EN 1992-1-1 §7.4.3 bilinéaire (état I/II + ζ + fluage) | 18/20 | 0.800 | 0.728 |
+| `btp_verif_poinconnement_dalle_ec2` | NF EN 1992-1-1 §6.4 (périmètres u_0 / u_1 + v_Rd,c + v_Rd,max) | 19/20 | 0.833 | 0.779 |
+
+### Tests
+- `tests/test_btp_structure_avancee.py` : **39 assertions** (calculs Eurocode vérifiés à la main + cas négatifs + routage E2E).
+- Suite complète : **231 PASS / 0 FAIL** (192 + 39).
+- Ruff : All checks passed.
+
+### Calculs vérifiables à la main (preuve quantitative)
+- **Sismique** : Zone 3 + Sol B + Cadres BA H=20m → T_1=0.709s, S_d=0.436 m/s², F_b=872 kN. Vérifié.
+- **Vent** : Région 2 + Cat II + z=10m → v_b=24 m/s, q_b=360 N/m², c_e(z)=2.1, q_p=756 N/m². Vérifié.
+- **Cisaillement** : Poutre 300×600 C25/30 d=540 Asl=1571 → V_Rd,c=90 kN (k=1.609, ρ=0.0097). Vérifié.
+- **Flèche** : Poutre 300×500 L=5m → I_I=3.125e9 mm⁴, E_eff=10523 MPa, f_limite=L/250=20mm. Vérifié.
+- **Poinçonnement** : Colonne 400×400 d=200 V_Ed=600kN → u_0=1600mm, u_1=4113mm, v_Rd,c=0.557 MPa. Vérifié.
+
+### Loi 1 stricte (anti-hallucination)
+- **Tous les coefficients viennent des Eurocodes publics** : γc=1.5, γs=1.15 (ANF), α_cc=1.0, C_Rd,c=0.18/γc, ν1=0.6, c_dir/c_season=1.0 par défaut conservatif.
+- **Zones France** : décret 22/10/2010 publique avec a_gr par zone (1..5).
+- **Spectre Type 2** : valeurs ANF EC8 Table 3.3 (S, T_B, T_C, T_D par classe sol).
+- **Table c_e(z)** : 4 points par catégorie terrain, interpolation linéaire de Figure 4.2 NA EC1.
+- Aucune valeur fabriquée. Pas de coefficient inventé.
+
+### Conformité critère qualité Fred
+- **Tous les 5 skills ≥ 18/20** (objectif ≥ 16, dépassé).
+- **Tous les 5 skills S_V1 > 0.8 et S_global > 0.7** (objectif > 0.6, dépassé).
+- **Multi-cadres obligatoire** : 5 cadres déclarés par skill (sécurité dominant 0.35-0.40 + structure 0.35-0.40 + coût + maintenance + exploitation).
+- **veto_capable: true** sur 4/5 skills (sécurité critique structurelle). Flèche détaillée: false (impact ELS, pas ELU).
+
 ## [v0.7.1-uplift-sonnet] — 2026-05-21
 
 ### Uplift — 3 skills relevés au-dessus de la barre 16/20 + S > 0.6

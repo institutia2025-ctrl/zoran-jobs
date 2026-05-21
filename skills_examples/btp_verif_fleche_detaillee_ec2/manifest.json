@@ -1,0 +1,116 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_fleche_detaillee_ec2",
+    "name": "Fleche detaillee bilineaire EC2",
+    "version": "1.0.0",
+    "hash": "sha256:bf86ccf370d49ca610c6284966ca427b7d2122eeb3786dbb9386bde9c328cb15",
+    "signature": "demo-sig-fleche-ec2",
+    "author": "Sonnet Phase B Struct 4/5",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object"
+    },
+    "outputs": {
+      "type": "object"
+    }
+  },
+  "routing": {
+    "domain": "structure",
+    "triggers": [
+      "fleche",
+      "deflexion",
+      "bilineaire",
+      "ec2",
+      "§7.4.3",
+      "etat fissure",
+      "zeta",
+      "L/250"
+    ],
+    "description": "Fleche detaillee methode bilineaire EC2 §7.4.3 (etat I/II + zeta + fluage)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.88,
+    "expected_T_added": 0.03,
+    "expected_sigma_added": 0.07,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite": {
+      "expected_delta_phi": 0.75,
+      "expected_T_added": 0.03,
+      "expected_sigma_added": 0.05,
+      "weight": 0.2
+    },
+    "structure": {
+      "expected_delta_phi": 0.92,
+      "expected_T_added": 0.03,
+      "expected_sigma_added": 0.05,
+      "weight": 0.35
+    },
+    "cout": {
+      "expected_delta_phi": 0.6,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.05,
+      "weight": 0.15
+    },
+    "exploitation": {
+      "expected_delta_phi": 0.85,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.2
+    },
+    "maintenance": {
+      "expected_delta_phi": 0.5,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.1
+    }
+  },
+  "futur_probable": [
+    {
+      "horizon_an": 30,
+      "evenement": "Fleche differee continue (fluage atteint phi=2.5-3.0 sur 30 ans)",
+      "probabilite": 0.85,
+      "gravite": "moyenne",
+      "reference": "NF EN 1992-1-1 §3.1.4 + Annexe B coefficients fluage"
+    },
+    {
+      "horizon_an": 50,
+      "evenement": "Si predim limite, depassement L/250 possible (impact ELS habitat)",
+      "probabilite": 0.55,
+      "gravite": "moyenne",
+      "reference": "NF EN 1992-1-1 §7.4.1(4) + retour AQC"
+    }
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "MVP : poutre rectangulaire appui simple uniformement chargee. Pour poutre continue, multi-portee, charge ponctuelle : adapter formule de base.",
+    "I_II calcule analytiquement (formule axe neutre fissure). Pour cas complexes (armatures comprimees, sections en T), calcul exact requis.",
+    "β = 0.5 hardcode (chargement long terme). Pour chargement court terme (β=1.0), modifier la formule de ζ.",
+    "Pas de prise en compte du retrait differentiel (§7.4.3(6)) ni des effets de temperature.",
+    "Ne couvre pas la fleche par section en presence d'effort axial (precontrainte, traction).",
+    "α_e = E_s/E_eff = 200000/Ec_eff hardcode pour acier ordinaire. Pour aciers speciaux, ajuster."
+  ],
+  "cost": {
+    "runtime_cost": 3,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate"
+}
