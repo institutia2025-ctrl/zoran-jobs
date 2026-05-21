@@ -1,0 +1,73 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "zoran_oracle_adaptation_agents",
+    "name": "Oracle d'adaptation des agents",
+    "version": "1.0.0",
+    "hash": "sha256:beea80b3fc0c77dc5a09f0424fc0e9a08c9ddd05473c7413cd289865f8aa2c67",
+    "signature": "zoran-meta-oracle_adaptation_agents",
+    "author": "Claude Code (skill méta — orchestration)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "etapes": {"type": "array"},
+      "agents_disponibles": {"type": "object"},
+      "budget_restant": {"type": "number"},
+      "coherence_courante": {"type": "number"},
+      "cycle": {"type": "integer"},
+      "cout_api_par_agent": {"type": "number"},
+      "charge_par_agent": {"type": "number"},
+      "seuil_coherence": {"type": "number"},
+      "journal": {"type": "array"}}},
+    "outputs": {"type": "object", "properties": {
+      "verdict": {"type": "string"},
+      "reveil": {"type": "string"},
+      "progression_pct": {"type": "number"},
+      "etapes_restantes": {"type": "integer"},
+      "agents_a_mobiliser": {"type": "object"},
+      "prochaines_etapes": {"type": "array"},
+      "cout_estime_cycle": {"type": "number"},
+      "budget_apres_cycle": {"type": "number"},
+      "cycles_restants_estimes": {"type": "integer"},
+      "journal": {"type": "array"},
+      "explication": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "orchestration",
+    "triggers": ["oracle adaptation", "dimensionner agents", "combien agents",
+                 "orchestrer projet ambitieux", "reveil oracle", "piloter agents"],
+    "description": "Oracle déterministe : à chaque cycle, dimensionne le nombre d'agents (locaux gratuits puis API finançables) et décide s'il faut se réveiller ou s'arrêter. 5 verdicts : TERMINE, STOP_INCOHERENCE, STOP_BUDGET, STOP_RESSOURCE, CONTINUER. Journalise chaque cycle."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global":       {"expected_delta_phi": 0.85, "expected_T_added": 0.0,  "expected_sigma_added": 0.05, "weight": 0.5},
+    "exploitation": {"expected_delta_phi": 0.75, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.3},
+    "cout":         {"expected_delta_phi": 0.7,  "expected_T_added": 0.0,  "expected_sigma_added": 0.1,  "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Un projet long lancé sans condition d'arrêt cohérente s'emballe : les agents continuent de tourner alors que la cohérence a chuté, accumulant un travail à jeter (runaway).", "probabilite": 0.55, "gravite": "elevee", "reference": "Mode d'échec classique des boucles agentiques autonomes — sans garde-fou d'arrêt, le coût croît sans borne"},
+    {"horizon_an": 1, "evenement": "Le budget API est dépassé sans alerte parce que l'allocation d'agents n'est pas plafonnée par le budget restant.", "probabilite": 0.5, "gravite": "moyenne", "reference": "Gouvernance de coût — toute mobilisation d'agents API doit être bornée par l'enveloppe budgétaire"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Le skill DÉCIDE — il ne lance aucun agent, n'ouvre aucune API, ne dort pas et ne se réveille pas seul. C'est une fonction pure (ni réseau, ni process — invariant runtime). Le « wake-up permanent », le serveur léger qui héberge l'oracle et le pilotage depuis un téléphone relèvent du harnais agentique, pas du skill.",
+    "« Ne jamais s'arrêter » au sens naïf est un anti-objectif : l'oracle tourne jusqu'à un arrêt COHÉRENT (TERMINE / incohérence / budget / ressource). Il ne garantit pas qu'un projet aboutisse — il garantit qu'il ne s'emballe pas.",
+    "cycles_restants_estimes est une heuristique linéaire (charge restante / débit du cycle courant) : elle suppose un débit constant et ne modélise ni les dépendances entre étapes, ni la variabilité réelle des agents.",
+    "La qualité du verdict dépend entièrement de l'exactitude des entrées fournies — statuts d'étapes, cohérence courante, budget (Loi 1 : aucune valeur n'est supposée).",
+    "Le journal retourné est cumulatif : l'appelant doit le repasser en entrée au cycle suivant pour conserver la continuité."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
