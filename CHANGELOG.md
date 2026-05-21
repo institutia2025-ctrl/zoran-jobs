@@ -2,6 +2,18 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.10.1-readme-en-cc] — 2026-05-22
+
+### Ajouté — README anglais (découvrabilité)
+
+- `README.en.md` — README anglais centré sur le cœur de valeur : *a
+  deterministic, falsifiable stop-criterion for autonomous agent loops*. Pitch
+  cerveau/muscles, les 5 verdicts, tableau comparatif arrêt classique vs arrêt
+  ZORAN, caveat honnête (l'oracle ne mesure pas la cohérence, il la reçoit),
+  quickstart sur le harnais minimal. Aucune note sur 20, aucun compteur figé —
+  conforme à `transmission/AI_READING_DISCIPLINE.md`.
+- `README.md` — lien ajouté vers la version anglaise.
+
 ## [v0.10.0-agentic-bridge-cc] — 2026-05-22
 
 ### Ajouté — mission `ZORAN_ORACLE_AGENTIC_BRIDGE_20260522` (7 livrables)
