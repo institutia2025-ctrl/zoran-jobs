@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_pente_evacuation_ep",
+    "name": "Vérification de pente d'évacuation",
+    "version": "1.0.0",
+    "hash": "sha256:13977646a68145868fd9d95ce8cec7a1a90bb926534a438bec39802ce34b9100",
+    "signature": "phase-b-cc-btp_calc_pente_evacuation_ep",
+    "author": "Claude Code (Phase B — bloc VRD)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "denivele_m": {"type": "number"}, "longueur_m": {"type": "number"},
+      "pente_min_pct": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "pente_pct": {"type": "number"}, "pente_cm_par_m": {"type": "number"},
+      "conforme": {"type": "boolean"}, "pente_min_pct": {"type": "number"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "vrd",
+    "triggers": ["pente evacuation", "ecoulement", "dtu 60.11", "reseau eaux", "verifier pente"],
+    "description": "Calcule et vérifie la pente d'un tronçon d'évacuation gravitaire (NF DTU 60.11)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.6},
+    "maintenance":  {"expected_delta_phi": 0.6,  "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 5, "evenement": "Pente insuffisante : stagnation, dépôts et engorgements répétés du réseau", "probabilite": 0.55, "gravite": "moyenne", "reference": "NF DTU 60.11 — conditions d'auto-curage des réseaux gravitaires"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Vérifie la pente géométrique vs un minimum. Ne dimensionne pas le diamètre.",
+    "Ne vérifie pas l'auto-curage (vitesse d'écoulement) ni les contre-pentes ponctuelles."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

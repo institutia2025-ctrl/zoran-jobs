@@ -189,6 +189,43 @@ check("etancheite : type de bâtiment inconnu → ValueError",
       raises_value_error(run, {"type_batiment": "bureau", "q4pa_surf_mesure": 0.5}))
 
 # ===========================================================================
+# BLOC VRD — 3 skills
+# ===========================================================================
+print("\n[Bloc VRD]")
+
+# --- btp_calc_volume_terrassement ---
+run = run_of("btp_calc_volume_terrassement")
+# 10 × 2 × 1.5 = 30 m³ en place ; × 1.25 = 37.5 m³ foisonné
+r = run({"longueur_m": 10, "largeur_m": 2, "profondeur_m": 1.5})
+check("volume_terrassement : 30 m³ en place, 37.5 m³ foisonné (calcul main)",
+      abs(r["volume_en_place_m3"] - 30.0) < 0.001
+      and abs(r["volume_foisonne_m3"] - 37.5) < 0.001)
+check("volume_terrassement : coefficient < 1.0 → ValueError",
+      raises_value_error(run, {"longueur_m": 10, "largeur_m": 2, "profondeur_m": 1.5,
+                               "coefficient_foisonnement": 0.8}))
+
+# --- btp_calc_pente_evacuation_ep ---
+run = run_of("btp_calc_pente_evacuation_ep")
+# dénivelé 0.30 m sur 10 m → pente 3.0 % → conforme (>= 1 %)
+r = run({"denivele_m": 0.30, "longueur_m": 10})
+check("pente_evacuation : 3.0 % → conforme",
+      abs(r["pente_pct"] - 3.0) < 0.001 and r["conforme"] is True)
+# 0.05 m sur 10 m → 0.5 % → non conforme
+r2 = run({"denivele_m": 0.05, "longueur_m": 10})
+check("pente_evacuation : 0.5 % → non conforme", r2["conforme"] is False)
+check("pente_evacuation : longueur nulle → ValueError",
+      raises_value_error(run, {"denivele_m": 0.3, "longueur_m": 0}))
+
+# --- btp_dimensionnement_collecteur_eu ---
+run = run_of("btp_dimensionnement_collecteur_eu")
+# ΣUV=100, K=0.5 → Q = 0.5 × √100 = 5.0 l/s → DN 100
+r = run({"unites_vidange_total": 100, "coef_frequentation_k": 0.5})
+check("collecteur_eu : Q = 5.0 l/s, DN 100 (calcul main)",
+      abs(r["debit_pointe_l_s"] - 5.0) < 0.001 and r["dn_minimal_indicatif"] == "DN 100")
+check("collecteur_eu : unités de vidange négatives → ValueError",
+      raises_value_error(run, {"unites_vidange_total": -1}))
+
+# ===========================================================================
 print()
 print("=" * 60)
 print(f"=== RESULTAT : {PASS} PASS / {FAIL} FAIL ===")

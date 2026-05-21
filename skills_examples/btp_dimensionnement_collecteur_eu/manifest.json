@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_dimensionnement_collecteur_eu",
+    "name": "Débit de pointe et collecteur d'eaux usées",
+    "version": "1.0.0",
+    "hash": "sha256:d5810f62c5481b2875f56f4fd394f33533f97333383a1216cabea23e4ef07122",
+    "signature": "phase-b-cc-btp_dimensionnement_collecteur_eu",
+    "author": "Claude Code (Phase B — bloc VRD)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "unites_vidange_total": {"type": "number"}, "coef_frequentation_k": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "debit_pointe_l_s": {"type": "number"}, "dn_minimal_indicatif": {"type": "string"},
+      "coef_frequentation_k": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "vrd",
+    "triggers": ["collecteur", "eaux usees", "debit de pointe", "en 12056", "unites de vidange"],
+    "description": "Calcule le débit de pointe d'eaux usées Q=K·√ΣUV et propose un DN (NF EN 12056-2)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.6},
+    "maintenance":  {"expected_delta_phi": 0.6, "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 10, "evenement": "Collecteur sous-dimensionné : mise en charge, refoulements et nuisances", "probabilite": 0.45, "gravite": "moyenne", "reference": "NF EN 12056-2 §6 (dimensionnement des collecteurs)"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Calcule le débit de pointe ; le DN proposé est indicatif — le choix définitif suit le tableau NF EN 12056-2 (taux de remplissage, pente, ventilation).",
+    "Loi 1 : K et les unités de vidange par appareil sont des données normatives fournies par l'appelant.",
+    "Ne traite pas les eaux pluviales ni les réseaux sous pression (relevage)."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
