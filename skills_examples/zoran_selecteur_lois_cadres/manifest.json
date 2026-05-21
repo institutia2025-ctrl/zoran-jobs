@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "zoran_selecteur_lois_cadres",
+    "name": "Sélecteur de lois et de cadres de cohérence",
+    "version": "1.0.0",
+    "hash": "sha256:bbbc9b63c0ceae1375ca8c0fdf8f0cadfc130cd8336ac0575e1c6cabe0419d57",
+    "signature": "zoran-meta-selecteur_lois_cadres",
+    "author": "Claude Code (skill méta — gouvernance)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "domaine": {"type": "string"}, "enjeu": {"type": "string"}}},
+    "outputs": {"type": "object", "properties": {
+      "cadres_pertinents": {"type": "array"}, "cadre_dominant": {"type": "string"},
+      "lois_pertinentes": {"type": "array"}, "lois_universelles": {"type": "array"},
+      "nb_lois": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "gouvernance",
+    "triggers": ["lois zoran", "cadres coherence", "selecteur", "codex zoran", "evaluation coherence"],
+    "description": "Détermine les cadres de cohérence et les lois du Codex Zoran pertinents pour une évaluation donnée."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global":       {"expected_delta_phi": 0.8, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.6},
+    "exploitation": {"expected_delta_phi": 0.6, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Loi 1 : les 11 intitulés de loi sont repris verbatim de CODEX_LAWS.json — aucun nom inventé.",
+    "La correspondance domaine → lois est une cartographie heuristique documentée fondée sur les intitulés ; la sémantique faisant autorité de chaque loi est dans le Codex Zoran (DOI Zenodo).",
+    "Domaines couverts : structure, thermique, securite, economie, transmission, gouvernance, pathologie, environnement — un domaine hors liste lève une erreur explicite."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

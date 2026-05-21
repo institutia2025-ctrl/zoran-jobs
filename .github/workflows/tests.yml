@@ -52,6 +52,8 @@ jobs:
         run: python tests/test_coherence_unit.py
       - name: test_btp_phase_b (55)
         run: python tests/test_btp_phase_b.py
+      - name: test_zoran_meta_skills (16)
+        run: python tests/test_zoran_meta_skills.py
 
   lint:
     name: ruff lint
