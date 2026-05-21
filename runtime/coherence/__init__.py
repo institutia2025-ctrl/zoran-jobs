@@ -4,8 +4,8 @@ from runtime.coherence.engine import (
     CoherenceState,
     candidate_S,
     compute_S,
-    dS_dt,
     delta_S,
+    dS_dt,
     record_S,
     state_S,
 )

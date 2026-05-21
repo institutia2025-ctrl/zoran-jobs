@@ -72,7 +72,7 @@ def build_graph() -> nx.DiGraph:
 
 def main() -> int:
     g = build_graph()
-    print(f"=== AUDIT TOPOLOGIQUE — CODE RUNTIME ZORAN's Jobs ===")
+    print("=== AUDIT TOPOLOGIQUE — CODE RUNTIME ZORAN's Jobs ===")
     print(f"modules : {g.number_of_nodes()} · imports internes : {g.number_of_edges()}")
     print()
 

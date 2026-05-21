@@ -83,6 +83,7 @@ check("sandbox_level invalide detecte", any("sandbox_level" in e for e in errors
 print()
 print("=== TEST 4 — un manifest valide ne produit AUCUNE erreur ===")
 import json  # noqa: E402
+
 good = json.loads((ROOT / "skills_examples" / "echo" / "manifest.json").read_text(encoding="utf-8"))
 check("manifest echo : 0 erreur", validate_manifest(good) == [])
 

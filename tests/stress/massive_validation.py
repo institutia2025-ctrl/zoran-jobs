@@ -32,7 +32,9 @@ from quarantine import ImmuneSystem, Journal  # noqa: E402
 from registry.manifest import Manifest, validate_manifest  # noqa: E402
 from router.router import route  # noqa: E402
 from runtime.coherence.engine import (  # noqa: E402
-    CoherenceState, compute_S, dS_dt, delta_S,
+    CoherenceState,
+    compute_S,
+    dS_dt,
 )
 
 SEED = 20260521
@@ -76,7 +78,7 @@ def to_manifest(d: dict) -> Manifest:
 
 # ============================================================================
 print("=" * 60)
-print("VALIDATION MASSIVE — ZORAN's Jobs (seed=%d)" % SEED)
+print(f"VALIDATION MASSIVE — ZORAN's Jobs (seed={SEED})")
 print("=" * 60)
 
 # --- BATTERIE 1 — validate_manifest : 500 valides + 500 corrompus -----------
@@ -180,6 +182,7 @@ print(f"    10 000 S + 1000 dS/dt · {(time.perf_counter()-t0)*1000:.0f} ms")
 print("\n[4] CINÉMATIQUE/CHAOS ImmuneSystem — 2000 évaluations")
 t0 = time.perf_counter()
 import tempfile
+
 jpath = Path(tempfile.mkdtemp()) / "journal.jsonl"
 imm = ImmuneSystem(Journal(jpath))
 CLEAN = {"io_conformity_rate": 1.0, "latency_avg_ms": 5.0, "stable": True}

@@ -23,7 +23,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from registry.manifest import Manifest
-from runtime.coherence.engine import CoherenceState, dS_dt, delta_S
+from runtime.coherence.engine import CoherenceState, delta_S, dS_dt
 
 
 @dataclass

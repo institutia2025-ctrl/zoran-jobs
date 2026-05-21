@@ -29,7 +29,10 @@ from loader import Loader  # noqa: E402
 from registry import Registry  # noqa: E402
 from router import route  # noqa: E402
 from runtime.coherence.engine import (  # noqa: E402
-    CoherenceState, compute_S, dS_dt, delta_S,
+    CoherenceState,
+    compute_S,
+    delta_S,
+    dS_dt,
 )
 from runtime.loop import run_once  # noqa: E402
 
