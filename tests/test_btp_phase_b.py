@@ -289,6 +289,44 @@ check("degagement : veto_capable (sécurité évacuation)",
       _reg.get("btp_verif_degagement_incendie").veto_capable is True)
 
 # ===========================================================================
+# BLOC ECONOMIE / CVC — 3 skills
+# ===========================================================================
+print("\n[Bloc Économie / CVC]")
+
+# --- btp_calc_revision_prix ---
+run = run_of("btp_calc_revision_prix")
+# P0=100000, a=0.125, I0=100, I=110 → coef = 0.125 + 0.875×1.1 = 1.0875 → 108750
+r = run({"prix_initial_eur": 100000, "terme_fixe": 0.125,
+         "index_initial": 100, "index_courant": 110})
+check("revision_prix : prix révisé = 108 750 € (calcul main)",
+      abs(r["prix_revise_eur"] - 108750.0) < 0.01)
+check("revision_prix : terme fixe hors [0,1] → ValueError",
+      raises_value_error(run, {"prix_initial_eur": 100000, "terme_fixe": 1.5,
+                               "index_initial": 100, "index_courant": 110}))
+
+# --- btp_calc_situation_travaux ---
+run = run_of("btp_calc_situation_travaux")
+# marché 200000, avancement 40%, RG 5% → travaux 80000, retenue 4000, dû 76000
+r = run({"montant_marche_ht": 200000, "avancement_pct": 40})
+check("situation : travaux 80 000 €, retenue 4 000 €, acompte 76 000 € (calcul main)",
+      abs(r["travaux_realises_ht"] - 80000.0) < 0.01
+      and abs(r["retenue_garantie_ht"] - 4000.0) < 0.01
+      and abs(r["acompte_periode_ht"] - 76000.0) < 0.01)
+check("situation : avancement > 100 → ValueError",
+      raises_value_error(run, {"montant_marche_ht": 200000, "avancement_pct": 150}))
+
+# --- btp_calc_debit_ventilation_vmc ---
+run = run_of("btp_calc_debit_ventilation_vmc")
+check("vmc : 4 pièces → 90 m³/h",
+      run({"nb_pieces_principales": 4})["debit_global_minimal_m3h"] == 90)
+check("vmc : 1 pièce → 35 m³/h",
+      run({"nb_pieces_principales": 1})["debit_global_minimal_m3h"] == 35)
+check("vmc : 7 pièces → 135 m³/h",
+      run({"nb_pieces_principales": 7})["debit_global_minimal_m3h"] == 135)
+check("vmc : 0 pièce → ValueError",
+      raises_value_error(run, {"nb_pieces_principales": 0}))
+
+# ===========================================================================
 print()
 print("=" * 60)
 print(f"=== RESULTAT : {PASS} PASS / {FAIL} FAIL ===")

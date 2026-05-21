@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_situation_travaux",
+    "name": "Calcul d'une situation de travaux",
+    "version": "1.0.0",
+    "hash": "sha256:3aa246b5c6683fcf23f1ad1a1467dfc24436010c7d566c0e2c7e2f9c8fe8558a",
+    "signature": "phase-b-cc-btp_calc_situation_travaux",
+    "author": "Claude Code (Phase B — bloc Économie)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "montant_marche_ht": {"type": "number"}, "avancement_pct": {"type": "number"},
+      "retenue_garantie_pct": {"type": "number"}, "deja_paye_ht": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "travaux_realises_ht": {"type": "number"}, "retenue_garantie_ht": {"type": "number"},
+      "montant_cumul_du_ht": {"type": "number"}, "acompte_periode_ht": {"type": "number"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "economie_construction",
+    "triggers": ["situation de travaux", "decompte mensuel", "avancement", "retenue de garantie", "acompte"],
+    "description": "Calcule un décompte mensuel d'avancement : travaux réalisés, retenue de garantie, acompte."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "cout":         {"expected_delta_phi": 0.7, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.6},
+    "exploitation": {"expected_delta_phi": 0.55, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Décompte erroné : trésorerie de chantier faussée et litige de paiement", "probabilite": 0.4, "gravite": "moyenne", "reference": "CCAG Travaux — décomptes mensuels et retenue de garantie"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Décompte HT, avancement global. Ne traite pas la révision de prix (voir btp_calc_revision_prix), la TVA, les pénalités ni le compte prorata.",
+    "Ne traite pas la libération de la retenue de garantie en fin de marché."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

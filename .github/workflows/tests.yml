@@ -50,7 +50,7 @@ jobs:
         run: python tests/test_btp_skills.py
       - name: test_coherence_unit (12)
         run: python tests/test_coherence_unit.py
-      - name: test_btp_phase_b (55)
+      - name: test_btp_phase_b (63)
         run: python tests/test_btp_phase_b.py
       - name: test_zoran_meta_skills (16)
         run: python tests/test_zoran_meta_skills.py
