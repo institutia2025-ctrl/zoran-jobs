@@ -1,0 +1,17 @@
+# Caches Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Artefacts d'outillage (régénérables — ne font pas partie du runtime)
+graphify-out/
+
+# Bundle de transmission : artefact généré par transmission/build_bundle.py.
+# Régénérable à la demande ; non versionné pour éviter la dérive.
+ZORAN_JOBS_TRANSMISSION_BUNDLE.md
+
+# Éditeurs / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

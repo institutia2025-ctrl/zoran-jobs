@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "printer_connect",
+    "name": "Connexion imprimante",
+    "version": "1.0.0",
+    "hash": "sha256:d5e5f8d52324dd3c817d6ae7758b7c03d0705ab2af6c00eba0bed77c671ab490",
+    "signature": "demo-signature-printer-connect",
+    "author": "Claude (exemple MVP)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": { "type": "object", "properties": {} },
+    "outputs": { "type": "object", "properties": { "status": { "type": "string" } } }
+  },
+  "routing": {
+    "domain": "devices",
+    "triggers": ["imprimante", "printer", "connecte", "imprimer"],
+    "description": "Detecte et connecte une imprimante (simule)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.4,
+    "expected_T_added": 0.1,
+    "expected_sigma_added": 0.1,
+    "corrective": false
+  },
+  "cost": { "runtime_cost": 3, "latency_class": "medium", "external_calls": false },
+  "permissions": ["device.printer"],
+  "sandbox_level": "isolated",
+  "dependencies": { "skills": [], "python": [] },
+  "rollback": { "rollbackable": true, "rollback_strategy": "undo_function" },
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

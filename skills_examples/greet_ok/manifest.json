@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "greet_ok",
+    "name": "Salutation conforme",
+    "version": "1.0.0",
+    "hash": "sha256:ce0991fc225624626c764c1033761399123e6752ca91416e31260070482405d9",
+    "signature": "demo-signature-greet-ok",
+    "author": "Claude (exemple MVP)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": { "type": "object", "properties": { "name": { "type": "string" } } },
+    "outputs": { "type": "object", "properties": { "greeting": { "type": "string" } } }
+  },
+  "routing": {
+    "domain": "greeting",
+    "triggers": ["bonjour", "salut", "greet", "accueil"],
+    "description": "Genere une salutation (conforme a son contrat io)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.4,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": { "runtime_cost": 1, "latency_class": "fast", "external_calls": false },
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": { "skills": [], "python": [] },
+  "rollback": { "rollbackable": true, "rollback_strategy": "none" },
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

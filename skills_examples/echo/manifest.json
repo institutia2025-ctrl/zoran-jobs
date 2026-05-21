@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "echo",
+    "name": "Echo",
+    "version": "1.0.0",
+    "hash": "sha256:43b94917f3add84123dda9849539ef776e75b34f01fcff317f8c520050fce1a6",
+    "signature": "demo-signature-echo-mvp",
+    "author": "Claude (exemple MVP)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": { "type": "object", "properties": { "text": { "type": "string" } } },
+    "outputs": { "type": "object", "properties": { "echo": { "type": "string" } } }
+  },
+  "routing": {
+    "domain": "demo",
+    "triggers": ["echo", "repete", "repeat", "redis"],
+    "description": "Renvoie le texte recu — skill de demonstration MVP."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.3,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": { "runtime_cost": 1, "latency_class": "fast", "external_calls": false },
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": { "skills": [], "python": [] },
+  "rollback": { "rollbackable": true, "rollback_strategy": "none" },
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
