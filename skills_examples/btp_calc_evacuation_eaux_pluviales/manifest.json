@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_evacuation_eaux_pluviales",
+    "name": "Calcul de débit d'eaux pluviales",
+    "version": "1.0.0",
+    "hash": "sha256:dbca858d5a9479c0bdef760a613c396fadf949ffdd868091039c198b848c70e3",
+    "signature": "phase-b-cc-btp_calc_evacuation_eaux_pluviales",
+    "author": "Claude Code (Phase B — bloc Enveloppe)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "surface_toiture_m2": {"type": "number"},
+      "intensite_pluviale_l_s_m2": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "debit_ep_l_s": {"type": "number"}, "surface_toiture_m2": {"type": "number"},
+      "intensite_pluviale_l_s_m2": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "vrd",
+    "triggers": ["eaux pluviales", "evacuation toiture", "gouttiere", "descente ep", "dtu 60.11"],
+    "description": "Calcule le débit d'eaux pluviales à évacuer d'une toiture (NF DTU 60.11)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.6},
+    "maintenance":  {"expected_delta_phi": 0.55, "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 10, "evenement": "Évacuation sous-dimensionnée : débordements de chéneaux lors d'épisodes pluvieux intenses", "probabilite": 0.45, "gravite": "moyenne", "reference": "NF DTU 60.11 — dimensionnement des évacuations d'eaux pluviales"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Débit sur surface projetée en plan. Ne dimensionne pas finement les chéneaux et descentes (tableaux DTU 60.11).",
+    "Loi 1 : l'intensité pluviale dépend de la région — la valeur par défaut 0.05 l/s/m² est la base courante DTU 60.11."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

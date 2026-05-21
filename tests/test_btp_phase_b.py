@@ -226,6 +226,69 @@ check("collecteur_eu : unités de vidange négatives → ValueError",
       raises_value_error(run, {"unites_vidange_total": -1}))
 
 # ===========================================================================
+# BLOC ENVELOPPE / SECURITE — 5 skills
+# ===========================================================================
+print("\n[Bloc Enveloppe / Sécurité]")
+
+# --- btp_verif_pente_toiture_couverture ---
+run = run_of("btp_verif_pente_toiture_couverture")
+r = run({"pente_posee_pct": 40, "pente_min_dtu_pct": 35, "materiau": "tuile"})
+check("pente_toiture : 40% >= 35% → conforme (marge 5)",
+      r["conforme"] is True and abs(r["marge_pct"] - 5.0) < 0.01)
+check("pente_toiture : 20% < 35% → non conforme",
+      run({"pente_posee_pct": 20, "pente_min_dtu_pct": 35})["conforme"] is False)
+check("pente_toiture : pente min nulle → ValueError",
+      raises_value_error(run, {"pente_posee_pct": 40, "pente_min_dtu_pct": 0}))
+
+# --- btp_calc_evacuation_eaux_pluviales ---
+run = run_of("btp_calc_evacuation_eaux_pluviales")
+# 100 m² × 0.05 l/s/m² = 5.0 l/s
+r = run({"surface_toiture_m2": 100})
+check("evacuation_ep : Q = 5.0 l/s (calcul main)", abs(r["debit_ep_l_s"] - 5.0) < 0.001)
+check("evacuation_ep : surface nulle → ValueError",
+      raises_value_error(run, {"surface_toiture_m2": 0}))
+
+# --- btp_verif_accessibilite_pmr_rampe ---
+run = run_of("btp_verif_accessibilite_pmr_rampe")
+check("pmr_rampe : pente 4% largeur 1.4 m → conforme",
+      run({"pente_pct": 4, "longueur_m": 5, "largeur_m": 1.4,
+           "paliers_repos_presents": True})["conforme"] is True)
+check("pmr_rampe : pente 12% → non conforme",
+      run({"pente_pct": 12, "longueur_m": 1, "largeur_m": 1.4})["conforme"] is False)
+check("pmr_rampe : pente 7% sur 5 m → non conforme (tolérance 2 m)",
+      run({"pente_pct": 7, "longueur_m": 5, "largeur_m": 1.4})["conforme"] is False)
+check("pmr_rampe : longueur nulle → ValueError",
+      raises_value_error(run, {"pente_pct": 4, "longueur_m": 0, "largeur_m": 1.4}))
+
+# --- btp_verif_garde_corps_hauteur ---
+run = run_of("btp_verif_garde_corps_hauteur")
+check("garde_corps : h=1050 mm, écart 100 mm → conforme",
+      run({"hauteur_mm": 1050, "ecartement_barreaux_mm": 100})["conforme"] is True)
+check("garde_corps : h=900 mm → non conforme",
+      run({"hauteur_mm": 900, "ecartement_barreaux_mm": 100})["conforme"] is False)
+check("garde_corps : écartement 150 mm → non conforme",
+      run({"hauteur_mm": 1050, "ecartement_barreaux_mm": 150})["conforme"] is False)
+check("garde_corps : hauteur nulle → ValueError",
+      raises_value_error(run, {"hauteur_mm": 0, "ecartement_barreaux_mm": 100}))
+check("garde_corps : veto_capable (sécurité chute)",
+      _reg.get("btp_verif_garde_corps_hauteur").veto_capable is True)
+
+# --- btp_verif_degagement_incendie ---
+run = run_of("btp_verif_degagement_incendie")
+# 2 UP → largeur réglementaire 1.40 m (article CO 36)
+check("degagement : largeur 1.5 m pour 2 UP → conforme",
+      run({"largeur_degagement_m": 1.5, "unites_passage_requises": 2})["conforme"] is True)
+check("degagement : largeur 1.0 m pour 2 UP (1.40 requis) → non conforme",
+      run({"largeur_degagement_m": 1.0, "unites_passage_requises": 2})["conforme"] is False)
+check("degagement : 3 UP → largeur min 1.80 m (3 × 0.60)",
+      abs(run({"largeur_degagement_m": 2.0, "unites_passage_requises": 3})["largeur_min_requise_m"]
+          - 1.80) < 0.01)
+check("degagement : UP = 0 → ValueError",
+      raises_value_error(run, {"largeur_degagement_m": 1.5, "unites_passage_requises": 0}))
+check("degagement : veto_capable (sécurité évacuation)",
+      _reg.get("btp_verif_degagement_incendie").veto_capable is True)
+
+# ===========================================================================
 print()
 print("=" * 60)
 print(f"=== RESULTAT : {PASS} PASS / {FAIL} FAIL ===")

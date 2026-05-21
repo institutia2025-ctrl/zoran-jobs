@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_pente_toiture_couverture",
+    "name": "Vérification de pente de toiture",
+    "version": "1.0.0",
+    "hash": "sha256:90d0b2395006e07d4fa51aaf65cba22a6bb961f233698a859640c3cedca04d7e",
+    "signature": "phase-b-cc-btp_verif_pente_toiture_couverture",
+    "author": "Claude Code (Phase B — bloc Enveloppe)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "pente_posee_pct": {"type": "number"}, "pente_min_dtu_pct": {"type": "number"},
+      "materiau": {"type": "string"}}},
+    "outputs": {"type": "object", "properties": {
+      "conforme": {"type": "boolean"}, "marge_pct": {"type": "number"},
+      "verdict": {"type": "string"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "enveloppe",
+    "triggers": ["pente toiture", "couverture", "dtu 40", "tuile", "verifier pente"],
+    "description": "Vérifie la pente d'une toiture vs la pente minimale du DTU 40."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.5},
+    "maintenance":  {"expected_delta_phi": 0.6,  "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.5}
+  },
+  "futur_probable": [
+    {"horizon_an": 10, "evenement": "Pente insuffisante : infiltrations, reprises de couverture et désordres d'humidité", "probabilite": 0.5, "gravite": "moyenne", "reference": "NF DTU série 40 — pentes minimales de couverture"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Compare la pente posée à une pente minimale fournie. Ne contient pas les abaques DTU 40 (matériau × zone × situation).",
+    "Loi 1 : la pente minimale est lue par l'appelant dans le DTU 40 applicable, non inventée par le skill."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

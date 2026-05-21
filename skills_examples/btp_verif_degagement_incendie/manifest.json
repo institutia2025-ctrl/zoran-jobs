@@ -1,0 +1,53 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_degagement_incendie",
+    "name": "Vérification de dégagement d'évacuation",
+    "version": "1.0.0",
+    "hash": "sha256:4f1dde0214e2cba1d11ca23db5dc0f3143b38a3f9e8b2e6ac10ddfd4cf97a61a",
+    "signature": "phase-b-cc-btp_verif_degagement_incendie",
+    "author": "Claude Code (Phase B — bloc Sécurité)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "largeur_degagement_m": {"type": "number"},
+      "unites_passage_requises": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "conforme": {"type": "boolean"}, "largeur_min_requise_m": {"type": "number"},
+      "marge_m": {"type": "number"}, "verdict": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "securite",
+    "triggers": ["degagement", "evacuation incendie", "unite de passage", "erp", "sortie de secours"],
+    "description": "Vérifie la largeur d'un dégagement vs unités de passage (ERP, article CO 36)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8,
+    "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.9,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.6},
+    "exploitation": {"expected_delta_phi": 0.55, "expected_T_added": 0.0,  "expected_sigma_added": 0.0,  "weight": 0.25},
+    "cout":         {"expected_delta_phi": 0.4,  "expected_T_added": 0.05, "expected_sigma_added": 0.0,  "weight": 0.15}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Dégagement sous-dimensionné : évacuation ralentie en cas d'incendie, mise en danger des occupants", "probabilite": 0.2, "gravite": "critique", "reference": "Règlement de sécurité ERP — articles CO 34 à CO 38"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Conversion unités de passage → largeur réglementaire (CO 36). Ne calcule pas le nombre d'UP requis (dépend de l'effectif et du type d'ERP, articles CO 34-38).",
+    "Loi 1 : le nombre d'UP est fourni par l'appelant d'après le règlement ERP.",
+    "Ne traite ni le nombre de dégagements, ni leur répartition, ni le désenfumage."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
