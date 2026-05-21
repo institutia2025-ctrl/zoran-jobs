@@ -2,6 +2,29 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.9.2-video-cc] — 2026-05-22
+
+### Ajouté — skill méta `zoran_video_publication_planner`
+
+Planificateur de publication vidéo A→Z. À partir d'une ou plusieurs vidéos
+sources (moments horodatés), d'un sujet, d'une cible et des réseaux visés, il
+produit un plan déterministe : montage (coupes sélectionnées par intensité,
+ouverture sur le moment le plus fort), hook, description, hashtags dérivés du
+sujet, style de sous-titres, charte graphique appliquée, plan de promotion
+(teasers courts à rediffuser) et calendrier relatif (compte à rebours en mode
+`lancement`, espacement croissant en mode `relance`). 7 réseaux supportés
+(TikTok, YouTube Shorts, Instagram Reels, LinkedIn, X, Facebook, YouTube),
+chacun avec son ratio et sa fenêtre de durée.
+
+Honnêteté de cadrage : le skill PLANIFIE — il ne regarde aucune vidéo, ne lance
+pas ffmpeg, ne transcrit pas, ne lit pas le site du user et ne publie nulle
+part. Découpage, rendu, sous-titrage et publication relèvent du harnais
+agentique (fonction pure, sans réseau ni process — invariant). Les moments
+vidéo et la charte graphique sont fournis en entrée, jamais inventés (Loi 1).
+
+### Tests
+- `tests/test_zoran_video_publication.py` (33) — ajouté au workflow CI.
+
 ## [v0.9.1-oracle-cc] — 2026-05-22
 
 ### Ajouté — skill méta `zoran_oracle_adaptation_agents`

@@ -1,0 +1,70 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "zoran_video_publication_planner",
+    "name": "Planificateur de publication vidéo",
+    "version": "1.0.0",
+    "hash": "sha256:9ab743e38373a0125b6f1727f4a1a196bfc0c289dab44a71202da11ed4f7abc7",
+    "signature": "zoran-meta-video_publication_planner",
+    "author": "Claude Code (skill méta — média / orchestration)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "videos": {"type": "array"},
+      "sujet": {"type": "string"},
+      "cible": {"type": "string"},
+      "reseaux": {"type": "array"},
+      "charte_graphique": {"type": "object"},
+      "objectif": {"type": "string"},
+      "nb_teasers": {"type": "integer"}}},
+    "outputs": {"type": "object", "properties": {
+      "sujet": {"type": "string"},
+      "cible": {"type": "string"},
+      "objectif": {"type": "string"},
+      "plans_par_reseau": {"type": "array"},
+      "plan_promotion": {"type": "object"},
+      "calendrier": {"type": "array"},
+      "charte_appliquee": {"type": "object"},
+      "avertissements": {"type": "array"},
+      "synthese": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "media",
+    "triggers": ["publication video", "montage video", "planifier video reseaux",
+                 "video reseaux sociaux", "diffuser video", "teaser video"],
+    "description": "À partir de vidéos sources (moments horodatés), d'un sujet, d'une cible et des réseaux visés : produit un plan de publication déterministe — montage, hook, description, hashtags, sous-titres, charte appliquée, teasers de promotion et calendrier relatif. Planifie ; n'exécute pas le rendu ni la publication."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8,
+    "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global":       {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.5},
+    "exploitation": {"expected_delta_phi": 0.8,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.3},
+    "cout":         {"expected_delta_phi": 0.7,  "expected_T_added": 0.0,  "expected_sigma_added": 0.1,  "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Une vidéo publiée sans adaptation de format par réseau (ratio, durée) subit une portée dégradée : recadrage automatique disgracieux, durée hors fenêtre optimale de la plateforme.", "probabilite": 0.6, "gravite": "moyenne", "reference": "Spécifications publiques des plateformes — chaque réseau impose un ratio et une fenêtre de durée distincts"},
+    {"horizon_an": 1, "evenement": "Sans accroche forte placée dans les premières secondes, le taux de rétention chute fortement et l'algorithme de la plateforme cesse de pousser la vidéo.", "probabilite": 0.55, "gravite": "moyenne", "reference": "Mécanique de rétention des formats courts — la fenêtre d'accroche initiale conditionne la diffusion"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Le skill PLANIFIE — il ne regarde aucune vidéo, ne lance pas ffmpeg, ne transcrit pas, ne lit pas le site du user et ne publie sur aucun réseau. C'est une fonction pure (ni réseau, ni process, ni fichier — invariant runtime). Le découpage réel, le rendu, le sous-titrage et la publication relèvent du harnais agentique.",
+    "Les « moments » horodatés de chaque vidéo doivent être fournis en entrée : le skill n'analyse pas le contenu visuel et n'invente aucun temps fort (Loi 1).",
+    "La charte graphique est fournie en entrée (extraite du site du user par le harnais). Absente, le skill le signale dans `avertissements` au lieu d'inventer des couleurs ou une police.",
+    "Le hook et la description sont des trames déterministes (gabarits) à partir du sujet et de la cible — un point de départ structuré, pas une rédaction créative (aucun LLM dans le runtime).",
+    "Les hashtags sont DÉRIVÉS des mots du sujet et de la cible : le skill n'a accès à aucune donnée de tendance et n'invente pas de hashtag populaire.",
+    "Les durées idéales par réseau sont des heuristiques de format ; les ratios d'image et durées maximales sont, eux, des faits de plateforme."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
