@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "btp_verif_peinture_dtu59_1",
+    "name": "Vérification peinture DTU 59.1",
+    "version": "1.0.0",
+    "hash": "sha256:06ef87a10a56ab48dc6a5c874e430a9f6780d0c2ef5bca07eb6a9115464593e9",
+    "signature": "phase-a-cc-btp_verif_peinture_dtu59_1",
+    "author": "Claude Code (Phase A — lot Claude Code, second oeuvre)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "support": {"type": "string"},
+        "humidite_pct": {"type": "number"},
+        "temperature_c": {"type": "number"},
+        "hygrometrie_ambiante_pct": {"type": "number"},
+        "support_prepare": {"type": "boolean"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "conforme": {"type": "boolean"},
+        "non_conformites": {"type": "array"},
+        "verdict": {"type": "string"}
+      }
+    }
+  },
+  "routing": {
+    "domain": "second_oeuvre",
+    "triggers": ["peinture", "dtu59", "support", "verifier", "conformite"],
+    "description": "Vérifie l'aptitude d'un support à recevoir une peinture selon le NF DTU 59.1."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.4,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

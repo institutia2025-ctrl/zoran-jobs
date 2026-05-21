@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "btp_verif_ite_dtu45_3",
+    "name": "Vérification ITE DTU 45.3",
+    "version": "1.0.0",
+    "hash": "sha256:a0dba4dd968f5e549f2dae18e99f87e98ceb8204a8a07002c31f2adf655127b8",
+    "signature": "phase-a-cc-btp_verif_ite_dtu45_3",
+    "author": "Claude Code (Phase A — lot Claude Code, second oeuvre)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "type_isolant": {"type": "string"},
+        "epaisseur_isolant_mm": {"type": "number"},
+        "nb_chevilles_m2": {"type": "number"},
+        "collage_pct": {"type": "number"},
+        "support": {"type": "string"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "conforme": {"type": "boolean"},
+        "non_conformites": {"type": "array"},
+        "avertissements": {"type": "array"},
+        "verdict": {"type": "string"}
+      }
+    }
+  },
+  "routing": {
+    "domain": "second_oeuvre",
+    "triggers": ["ite", "isolation", "exterieure", "verifier", "dtu45"],
+    "description": "Vérifie une isolation thermique par l'extérieur selon le NF DTU 45.3."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.4,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "btp_verif_menuiserie_pvc_dtu36_5",
+    "name": "Vérification menuiserie PVC DTU 36.5",
+    "version": "1.0.0",
+    "hash": "sha256:f357282c7bd017970a11fdc916a69969cfb1f6c88ff99a59de354833e79918ad",
+    "signature": "phase-a-cc-btp_verif_menuiserie_pvc_dtu36_5",
+    "author": "Claude Code (Phase A — lot Claude Code, second oeuvre)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "largeur_mm": {"type": "number"},
+        "hauteur_mm": {"type": "number"},
+        "nb_points_fixation": {"type": "number"},
+        "type_pose": {"type": "string"},
+        "etancheite_realisee": {"type": "boolean"},
+        "calage_realise": {"type": "boolean"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "conforme": {"type": "boolean"},
+        "non_conformites": {"type": "array"},
+        "nb_points_requis": {"type": "number"},
+        "verdict": {"type": "string"}
+      }
+    }
+  },
+  "routing": {
+    "domain": "second_oeuvre",
+    "triggers": ["menuiserie", "fenetre", "pose", "verifier", "dtu36"],
+    "description": "Vérifie une pose de fenêtre PVC selon le NF DTU 36.5."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.4,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "btp_ratio_estimatif_courant",
+    "name": "Estimation par ratios courants",
+    "version": "1.0.0",
+    "hash": "sha256:6f113832fed23d98b57fadfcac3f5de03be224ff7c87372a2a29542ee01c126f",
+    "signature": "phase-a-cc-btp_ratio_estimatif_courant",
+    "author": "Claude Code (Phase A — lot Claude Code, economie)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "type_ouvrage": {"type": "string"},
+        "surface_m2": {"type": "number"},
+        "niveau_standing": {"type": "string"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "ratio_applique_eur_m2": {"type": "number"},
+        "cout_estime_eur": {"type": "number"},
+        "fourchette_basse_eur": {"type": "number"},
+        "fourchette_haute_eur": {"type": "number"},
+        "erreurs": {"type": "array"},
+        "avertissement": {"type": "string"}
+      }
+    }
+  },
+  "routing": {
+    "domain": "economie_construction",
+    "triggers": ["ratio", "estimation", "cout", "estimer", "budget"],
+    "description": "Estime un coût travaux par ratio €/m² (ordres de grandeur publics)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.4,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
