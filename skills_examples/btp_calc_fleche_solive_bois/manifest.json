@@ -1,0 +1,52 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_fleche_solive_bois",
+    "name": "Calcul de flèche de solive bois",
+    "version": "1.0.0",
+    "hash": "sha256:e151684c39db46eaef65e71979ba6c13740b9a61a9efebcf411c0027917b77c2",
+    "signature": "phase-b-cc-btp_calc_fleche_solive_bois",
+    "author": "Claude Code (Phase B — bloc Charpente bois)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "b_mm": {"type": "number"}, "h_mm": {"type": "number"},
+      "entraxe_m": {"type": "number"}, "portee_m": {"type": "number"},
+      "charge_surfacique_kn_m2": {"type": "number"}, "module_e_mpa": {"type": "number"},
+      "limite_fleche_denominateur": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "fleche_mm": {"type": "number"}, "fleche_limite_mm": {"type": "number"},
+      "conforme": {"type": "boolean"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "structure",
+    "triggers": ["fleche solive", "fleche bois", "deformation", "ec5", "etat limite service"],
+    "description": "Calcule la flèche d'une solive bois et la compare à la limite admissible (NF EN 1995-1-1 §7.2)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.7,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "structure":    {"expected_delta_phi": 0.75, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.5},
+    "exploitation": {"expected_delta_phi": 0.7,  "expected_T_added": 0.0,  "expected_sigma_added": 0.0,  "weight": 0.5}
+  },
+  "futur_probable": [
+    {"horizon_an": 15, "evenement": "Flèche excessive : désordres en second œuvre (carrelage fissuré, portes qui coincent, plafond fendu)", "probabilite": 0.45, "gravite": "moyenne", "reference": "NF EN 1995-1-1 §7.2 (limites de flèche)"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Flèche instantanée, charge répartie uniforme, travée sur deux appuis. Ne traite pas la flèche différée (fluage, kdef) ni les charges ponctuelles.",
+    "Limite L/300 par défaut — un CCTP peut imposer L/500. Loi 1 : le module E est fourni."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

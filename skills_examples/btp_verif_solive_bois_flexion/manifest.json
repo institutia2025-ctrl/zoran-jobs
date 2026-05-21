@@ -1,0 +1,53 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_solive_bois_flexion",
+    "name": "Vérification de solive bois en flexion",
+    "version": "1.0.0",
+    "hash": "sha256:8c2b558f77b57656a6f8ad315be406e9083526d6a758ee6f3b4a82057465b57d",
+    "signature": "phase-b-cc-btp_verif_solive_bois_flexion",
+    "author": "Claude Code (Phase B — bloc Charpente bois)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "b_mm": {"type": "number"}, "h_mm": {"type": "number"},
+      "entraxe_m": {"type": "number"}, "portee_m": {"type": "number"},
+      "charge_surfacique_kn_m2": {"type": "number"}, "fm_d_mpa": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "moment_max_kn_m": {"type": "number"}, "contrainte_flexion_mpa": {"type": "number"},
+      "conforme": {"type": "boolean"}, "verdict": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "structure",
+    "triggers": ["solive bois", "flexion bois", "charpente", "eurocode 5", "ec5"],
+    "description": "Vérifie une solive bois en flexion simple (NF EN 1995-1-1 §6.1.6)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8,
+    "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite":  {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.4},
+    "structure": {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.4},
+    "cout":      {"expected_delta_phi": 0.5,  "expected_T_added": 0.1,  "expected_sigma_added": 0.0,  "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Solive sous-dimensionnée : fissuration puis rupture en flexion sous charge d'exploitation", "probabilite": 0.3, "gravite": "elevee", "reference": "NF EN 1995-1-1 §6.1.6"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Flexion simple, travée isostatique sur deux appuis. Ne traite ni le cisaillement, ni le déversement, ni la flèche (voir btp_calc_fleche_solive_bois).",
+    "Loi 1 : fm,d dépend de la classe de bois et des coefficients EC5 (kmod, γM) — elle est fournie."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
