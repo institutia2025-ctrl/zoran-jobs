@@ -20,7 +20,7 @@
   },
   "routing": {
     "domain": "reglementation",
-    "triggers": ["emprise au sol", "plu", "ces", "coefficient emprise", "urbanisme"],
+    "triggers": ["emprise au sol", "plan local urbanisme", "coefficient emprise au sol", "urbanisme", "permis de construire"],
     "description": "Vérifie l'emprise au sol vs le coefficient d'emprise au sol du PLU."
   },
   "coherence": {
