@@ -1,0 +1,37 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_diag_corrosion_armatures", "name": "Diag corrosion armatures BA",
+               "version": "1.0.0", "hash": "sha256:77096acccd0b711d360bfeeb4035b1f01b76709dae9a43c22b0066087ee37294", "signature": "demo-sig-corrosion",
+               "author": "Sonnet Patho 4/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object", "properties": {"perte_section_pct": {"type": "number"}}},
+         "outputs": {"type": "object", "properties": {"severite": {"type": "string"}}}},
+  "routing": {"domain": "pathologie",
+              "triggers": ["corrosion", "rouille", "armature", "epaufrure", "EN 1504", "principe"],
+              "description": "Diagnostic corrosion armatures + orientation principe EN 1504-9."},
+  "coherence": {"expected_delta_phi": 0.80, "expected_T_added": 0.05, "expected_sigma_added": 0.10, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.90, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.40},
+    "structure":    {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.30},
+    "maintenance":  {"expected_delta_phi": 0.70, "expected_T_added": 0.00, "expected_sigma_added": 0.10, "weight": 0.15},
+    "cout":         {"expected_delta_phi": 0.30, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [
+    {"horizon_an": 10, "evenement": "Progression corrosion + eclatement enrobage si non traite",
+     "probabilite": 0.80, "gravite": "elevee", "reference": "NF EN 1504-9 + retour AQC patrimoine BA"},
+    {"horizon_an": 30, "evenement": "Perte de capacite portante structurelle (rupture ELU)",
+     "probabilite": 0.60, "gravite": "critique", "reference": "NF EN 1992-1-1 §10 + retour experience effondrements ouvrages BA"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Oriente vers un PRINCIPE EN 1504-9. Ne choisit PAS le systeme de reparation (R1/R2/R3/R4 selon EN 1504-3).",
+    "Pas d'evaluation quantitative de la capacite portante residuelle (necessite recalcul EC2 sur section reduite).",
+    "Hypothese : perte de section uniformement repartie. Corrosion localisee piqure non couverte (cas XS chlorures).",
+    "Ne prend pas en compte la temperature, humidite relative, dosage en chlorures (mesures complementaires)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

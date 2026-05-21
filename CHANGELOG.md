@@ -2,6 +2,38 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.6.0-phase-a-sonnet-pathologies] — 2026-05-21
+
+### Ajouté — 5 skills Pathologies (AXE 4 du masterplan, ma moitié des 20/80)
+
+Catalogue Pathologies en V2 (multi-cadres + futur probable + veto + limites) :
+
+| skill_id | Pathologie | Référence(s) métier (publiques) |
+|---|---|---|
+| `btp_diag_fissure_macon` | Fissures maçonnerie | NF DTU 20.1 §10 + grille AQC paramétrable (Loi 1 stricte) |
+| `btp_diag_humidite_remontee` | Remontées capillaires | NF DTU 14.1 + NF DTU 20.1 §10 |
+| `btp_diag_carbonatation_beton` | Carbonatation béton armé | NF EN 14630 + NF EN 1992-1-1 §4.4 + NF EN 206-1 |
+| `btp_diag_corrosion_armatures` | Corrosion armatures + principe EN 1504 | NF EN 1504-9 + NF EN 206-1 |
+| `btp_diag_desordre_carrelage` | Désordres carrelage collé | NF DTU 52.2 + Cahier CSTB 3567 |
+
+### Tests
+- `tests/test_btp_pathologies.py` : **25 assertions** (positif + négatif + routage end-to-end pour les 5).
+- Suite complète : **164 PASS / 0 FAIL** (139 + 25).
+- Ruff : All checks passed.
+
+### Conformité Loi 1 (jamais halluciner)
+- **`btp_diag_fissure_macon`** : aucun seuil mm AQC hard-codé. Les seuils a/b/c/d sont fournis en input par l'utilisateur avec source. Si absents, classification AQC reste `None` (skill reste utile via le qualitatif DTU 20.1).
+- **`btp_diag_humidite_remontee`** : aucun % humidité hard-codé. Seuils en input + source obligatoire.
+- **`btp_diag_carbonatation_beton`** : compare deux mesures fournies (carbonatation vs enrobage) ; pas de modèle de progression caché.
+- **`btp_diag_corrosion_armatures`** : oriente vers un principe EN 1504-9, ne décide pas du système.
+- **`btp_diag_desordre_carrelage`** : checklist visuelle + raisonnement DTU 52.2, aucune fabrication.
+
+### Conformité V2
+- 5 skills V2 (schema_version 2.0), tous multi-cadres avec INV-1 par cadre.
+- `veto_capable: true` sur fissure, carbonatation, corrosion (impact sécurité bâti).
+- Tous ont au moins 1 entrée `futur_probable` avec `reference` publique vérifiable.
+- Tous ont `limites_explicites` non vide (Loi 10 : refus partiel explicite).
+
 ## [v0.4.0-contract-v2] — 2026-05-21
 
 ### Ajouté — Contrat skill V2 (industrialisation)
