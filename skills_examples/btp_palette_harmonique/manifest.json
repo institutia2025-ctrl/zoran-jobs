@@ -1,0 +1,79 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "palette_harmonique",
+    "name": "Palette harmonique",
+    "version": "1.0.0",
+    "hash": "sha256:52970384df8dc389fc474c0d90d58effc063a001c08ffa5a3317b200df9fb057",
+    "signature": "demo-signature-btp-palette-harmonique",
+    "author": "Frederic TABARY (BTP Phase A)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "hue": {
+          "type": "integer"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "palette": {
+          "type": "array"
+        }
+      }
+    }
+  },
+  "routing": {
+    "domain": "decoration",
+    "triggers": [
+      "palette",
+      "couleur",
+      "harmonie",
+      "teinte",
+      "decorateur"
+    ],
+    "description": "Genere une palette de 3 couleurs triadiques HSL a partir d'une teinte de base. Niveau decorateur."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.3,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {
+    "runtime_cost": 1,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate",
+  "coherence_multi_frame": {
+    "exploitation": {
+      "expected_delta_phi": 0.3,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 1.0
+    }
+  },
+  "veto_capable": false,
+  "limites_explicites": [
+    "Genere une palette triadique uniquement. Ne couvre pas complementaire, analogique, monochromatique.",
+    "Theorie HSL pure ; ne tient pas compte de la psychologie des couleurs ni des contextes culturels."
+  ]
+}

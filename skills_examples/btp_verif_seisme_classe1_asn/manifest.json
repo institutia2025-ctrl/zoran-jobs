@@ -1,0 +1,124 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "verif_seisme_classe1_asn",
+    "name": "Verification seisme EIPS classe 1 (RFS 2001-01)",
+    "version": "1.0.0",
+    "hash": "sha256:e0bbcfcad170ca50d0a0c6aeeaac2d4c05b041589f69cb9212ff857623fbd0c7",
+    "signature": "demo-signature-btp-rfs-2001-01",
+    "author": "Frederic TABARY (BTP Phase A)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "pga_smhv_g": {
+          "type": "number"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "conforme": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "routing": {
+    "domain": "nucleaire",
+    "triggers": [
+      "seisme",
+      "asn",
+      "rfs",
+      "eips",
+      "inb",
+      "smhv",
+      "sms",
+      "nucleaire"
+    ],
+    "description": "Verification marge sismique d'un EIPS classe 1 selon RFS 2001-01. Niveau ingenieur structure nucleaire."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.85,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.1,
+    "corrective": false
+  },
+  "cost": {
+    "runtime_cost": 3,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate",
+  "coherence_multi_frame": {
+    "securite": {
+      "expected_delta_phi": 0.9,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.05,
+      "weight": 0.4
+    },
+    "structure": {
+      "expected_delta_phi": 0.85,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.05,
+      "weight": 0.3
+    },
+    "cout": {
+      "expected_delta_phi": 0.2,
+      "expected_T_added": 0.1,
+      "expected_sigma_added": 0.0,
+      "weight": 0.1
+    },
+    "maintenance": {
+      "expected_delta_phi": 0.3,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 0.1
+    },
+    "exploitation": {
+      "expected_delta_phi": 0.4,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 0.1
+    }
+  },
+  "veto_capable": true,
+  "futur_probable": [
+    {
+      "horizon_an": 30,
+      "evenement": "Re-evaluation aleas sismiques (mise a jour donnees IRSN)",
+      "probabilite": 0.8,
+      "gravite": "elevee",
+      "reference": "RFS 2001-01 §3 + reactualisations periodiques ASN"
+    },
+    {
+      "horizon_an": 50,
+      "evenement": "Revision RFS / norme EIPS post-retour d'experience Fukushima+",
+      "probabilite": 0.6,
+      "gravite": "elevee",
+      "reference": "Doctrine ASN post-2011 + RGM EDF"
+    }
+  ],
+  "limites_explicites": [
+    "MVP demonstratif : verifie marge PGA SMS uniquement.",
+    "Ne couvre PAS : spectre de reponse complet, interaction sol-structure (ISS), modes propres, ductilite.",
+    "Ne couvre PAS effets secondaires : liquefaction, glissement, tsunami, falaise/cavite.",
+    "Une vraie note de calcul EIPS demande IRSN + AREVA/EDF + audit ASN, sur logiciel agree (CASTOR, ANSYS, SISMOC)."
+  ]
+}

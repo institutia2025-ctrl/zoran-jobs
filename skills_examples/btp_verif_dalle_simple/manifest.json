@@ -1,0 +1,125 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_dalle_simple",
+    "name": "Verif dalle BA predimensionnement",
+    "version": "1.1.0",
+    "hash": "sha256:a62b6b8708496e9f820d36c32f2ae0ed8967449c6c871240bf4f72ca57542e53",
+    "signature": "demo-sig-dalle",
+    "author": "Sonnet Struct 3/5 (uplift v1.1 : bidir Bares-Hahn + fleche reelle)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "portee_l_m": {
+          "type": "number"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "conforme": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "routing": {
+    "domain": "structure",
+    "triggers": [
+      "dalle",
+      "epaisseur",
+      "predimensionnement",
+      "fleche",
+      "ec2",
+      "l/d",
+      "ratio portee"
+    ],
+    "description": "Verif dalle BA (EC2 §7.4): ratio L/d + Bares-Hahn bidir + fleche reelle simplifiee."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.85,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite": {
+      "expected_delta_phi": 0.85,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.05,
+      "weight": 0.3
+    },
+    "structure": {
+      "expected_delta_phi": 0.85,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.05,
+      "weight": 0.3
+    },
+    "cout": {
+      "expected_delta_phi": 0.55,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.0,
+      "weight": 0.15
+    },
+    "exploitation": {
+      "expected_delta_phi": 0.7,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.15
+    },
+    "maintenance": {
+      "expected_delta_phi": 0.4,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.1
+    }
+  },
+  "futur_probable": [
+    {
+      "horizon_an": 30,
+      "evenement": "Fluage continu de la dalle (phi peut atteindre 2.5-3.0 sur 30 ans)",
+      "probabilite": 0.85,
+      "gravite": "moyenne",
+      "reference": "NF EN 1992-1-1 §3.1.4 + Annexe B"
+    },
+    {
+      "horizon_an": 50,
+      "evenement": "Si predim limite, fleche admissible peut etre depassee L/250",
+      "probabilite": 0.6,
+      "gravite": "moyenne",
+      "reference": "NF EN 1992-1-1 §7.4.1(4) ELS QP"
+    }
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Calcul fleche en SECTION NON FISSUREE (zone elastique). Si fissuration, integration exacte §7.4.3 requise (sigma_s pour z = 0.85d en moyenne).",
+    "Bares-Hahn : table 5 points + interpolation lineaire. Pour ratio precis, table complete EC2 Annexe ou manuel Mougin.",
+    "MVP : portees < 7m. Au-dela, calcul rigoureux §7.4.3 + verification flèche differee.",
+    "Hypothese habitat (phi=2.0). Pour batiments tertiaires, locaux secs, ou stockage : phi different (§3.1.4 EC2).",
+    "Pas de verif poinçonnement (§6.4) — skill separe envisage.",
+    "Bidirectionnel limite a ratio Lx/Ly in [1..2]. Au-dela : considere uniaxial (k=1.0)."
+  ],
+  "cost": {
+    "runtime_cost": 1,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate"
+}

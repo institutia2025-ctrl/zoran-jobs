@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_volume_terrassement",
+    "name": "Calcul de volume de terrassement",
+    "version": "1.0.0",
+    "hash": "sha256:8e37f211d78d4b64c8e3c08d6fd208d38497014c44a9bb0971bc10ec2ee8b8b5",
+    "signature": "phase-b-cc-btp_calc_volume_terrassement",
+    "author": "Claude Code (Phase B — bloc VRD)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "longueur_m": {"type": "number"}, "largeur_m": {"type": "number"},
+      "profondeur_m": {"type": "number"}, "coefficient_foisonnement": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "volume_en_place_m3": {"type": "number"}, "volume_foisonne_m3": {"type": "number"},
+      "coefficient_foisonnement": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "vrd",
+    "triggers": ["terrassement", "deblai", "volume fouille", "foisonnement", "metre"],
+    "description": "Calcule le volume de déblai en place et foisonné à évacuer."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "cout":         {"expected_delta_phi": 0.65, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.6},
+    "exploitation": {"expected_delta_phi": 0.5,  "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Foisonnement sous-estimé : surcoût d'évacuation et de mise en décharge", "probabilite": 0.4, "gravite": "faible", "reference": "Métré de terrassement — données de foisonnement de l'étude géotechnique"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Fouille à section rectangulaire constante. Ne traite pas les talus (fruit de pente) ni les fouilles en gradins.",
+    "Loi 1 : le coefficient de foisonnement provient de l'étude de sol — la valeur par défaut 1.25 est indicative."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

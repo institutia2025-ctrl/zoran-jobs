@@ -1,0 +1,110 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "descente_charges_simple",
+    "name": "Descente de charges simplifiee Eurocode",
+    "version": "1.0.0",
+    "hash": "sha256:867960b1f5eeb40be2a1c7fe5da27b92e633b55f993bc4ecafbd9618a9881e0e",
+    "signature": "demo-signature-btp-descente-charges",
+    "author": "Frederic TABARY (BTP Phase A)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "surface_tributaire_m2": {
+          "type": "number"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "N_ELU_kN": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "routing": {
+    "domain": "structure",
+    "triggers": [
+      "descente",
+      "charges",
+      "poteau",
+      "elu",
+      "eurocode",
+      "kN",
+      "genie civil"
+    ],
+    "description": "Descente de charges simplifiee sur poteau central, combinaison 1,35G+1,5Q (Eurocode 0). Niveau ingenieur GC."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.7,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.1,
+    "corrective": false
+  },
+  "cost": {
+    "runtime_cost": 2,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate",
+  "coherence_multi_frame": {
+    "structure": {
+      "expected_delta_phi": 0.7,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.05,
+      "weight": 0.4
+    },
+    "securite": {
+      "expected_delta_phi": 0.6,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.05,
+      "weight": 0.3
+    },
+    "cout": {
+      "expected_delta_phi": 0.3,
+      "expected_T_added": 0.1,
+      "expected_sigma_added": 0.0,
+      "weight": 0.15
+    },
+    "maintenance": {
+      "expected_delta_phi": 0.2,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 0.15
+    }
+  },
+  "veto_capable": true,
+  "futur_probable": [
+    {
+      "horizon_an": 50,
+      "evenement": "Re-evaluation aux Eurocodes annexes nationales en vigueur",
+      "probabilite": 0.7,
+      "gravite": "moyenne",
+      "reference": "NF EN 1990 + revisions ANF periodiques"
+    }
+  ],
+  "limites_explicites": [
+    "MVP demonstratif : combinaison ELU fondamentale 1,35G+1,5Q uniquement.",
+    "Hypothese : poteau central, surface tributaire constante par etage. Pas d'effets de bord, pas de moments.",
+    "Ne couvre PAS : charges horizontales (vent NF EN 1991-1-4, seisme NF EN 1998), neige, accidentelles.",
+    "Ne remplace pas une note de calcul BET. Sortie = pre-dimensionnement."
+  ]
+}

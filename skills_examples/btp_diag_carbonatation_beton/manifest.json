@@ -1,0 +1,37 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_diag_carbonatation_beton", "name": "Diag carbonatation beton arme",
+               "version": "1.0.0", "hash": "sha256:770db415216c4485c2b5cfc3d93a90e241f49b20920d91313d4a80e084e5b36b", "signature": "demo-sig-carbonatation",
+               "author": "Sonnet Patho 3/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object", "properties": {"profondeur_carbonatation_mm": {"type": "number"}}},
+         "outputs": {"type": "object", "properties": {"depassivation_atteinte": {"type": "boolean"}}}},
+  "routing": {"domain": "pathologie",
+              "triggers": ["carbonatation", "beton", "enrobage", "armature", "depassivation", "EN 14630"],
+              "description": "Compare carbonatation et enrobage selon EN 14630 + EC2 §4.4 + EN 206-1."},
+  "coherence": {"expected_delta_phi": 0.80, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.35},
+    "structure":    {"expected_delta_phi": 0.80, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.30},
+    "maintenance":  {"expected_delta_phi": 0.75, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.20},
+    "cout":         {"expected_delta_phi": 0.40, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [
+    {"horizon_an": 10, "evenement": "Progression front carbonatation selon loi en racine du temps",
+     "probabilite": 0.85, "gravite": "moyenne", "reference": "Modele de Tuutti + NF EN 14630"},
+    {"horizon_an": 30, "evenement": "Corrosion generalisee armatures + eclatement enrobage si non reparation",
+     "probabilite": 0.75, "gravite": "elevee", "reference": "NF EN 1504 + retour AQC patrimoine BA"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Compare deux mesures ponctuelles — ne predit pas la cinetique future (necessite modele Tuutti + abaques k).",
+    "Pas de prise en compte de la fissuration du beton (accelere carbonatation localement).",
+    "Pas d'integration des effets combines : chlorures (cf NF EN 1504-9), gel-degel, sulfates.",
+    "Hypothese : mesure phenolphtaleine fiable (zone humide reactivee, lecture immediate selon EN 14630)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

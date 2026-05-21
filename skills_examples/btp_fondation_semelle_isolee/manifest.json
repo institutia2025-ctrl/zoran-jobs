@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_fondation_semelle_isolee", "name": "Predim semelle isolee carree",
+               "version": "1.0.0", "hash": "sha256:3b85951e06c77bfc3f5f7f30f5d53eb14e3ee7da41330959b96c15ae7a95037d", "signature": "demo-sig-semelle",
+               "author": "Sonnet Struct 4/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object", "properties": {"N_Ed_kN": {"type": "number"}}},
+         "outputs": {"type": "object", "properties": {"B_cote_mm": {"type": "integer"}}}},
+  "routing": {"domain": "structure",
+              "triggers": ["semelle", "fondation", "isolee", "EC7", "DTU 13.1", "sigma sol", "geo", "predimensionnement"],
+              "description": "Predim semelle isolee carree centree, EC7 + DTU 13.1."},
+  "coherence": {"expected_delta_phi": 0.80, "expected_T_added": 0.05, "expected_sigma_added": 0.10, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.90, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.35},
+    "structure":    {"expected_delta_phi": 0.80, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.30},
+    "cout":         {"expected_delta_phi": 0.50, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.20},
+    "maintenance":  {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.20, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [
+    {"horizon_an": 50, "evenement": "Tassement long terme si sol argileux ou alluvionnaire",
+     "probabilite": 0.70, "gravite": "moyenne", "reference": "NF EN 1997-1 §6.6 + retour AQC pathologies fondations"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "MVP : semelle carree centree, charge centree pure. Pas d'excentricite, pas de moment, pas de chargement reparti complexe.",
+    "Loi 1 stricte : sigma_sol_kpa doit etre fourni par l'etude G1/G2 et la source tracee.",
+    "Ne calcule pas le tassement (EC7 §6.6) ni le tassement differentiel entre semelles.",
+    "Ne couvre pas les semelles filantes ni les radiers ni les fondations profondes (pieux DTU 13.2).",
+    "Ne verifie pas le poinçonnement EC2 §6.4 (skill separe envisage)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

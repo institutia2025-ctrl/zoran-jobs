@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_isolement_acoustique_reglementaire",
+    "name": "Verification d'isolement acoustique reglementaire",
+    "version": "1.0.0",
+    "hash": "sha256:f7b7717d1c200dac1dda286ed43bac8be934e5b675780e6710d66177a3667a06",
+    "signature": "phase-b-cc-btp_verif_isolement_acoustique_reglementaire",
+    "author": "Claude Code (Phase B — bloc Acoustique)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "type_paroi": {"type": "string"}, "isolement_mesure_db": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "conforme": {"type": "boolean"}, "grandeur": {"type": "string"},
+      "seuil_reglementaire": {"type": "number"}, "marge_db": {"type": "number"},
+      "verdict": {"type": "string"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "acoustique",
+    "triggers": ["isolement acoustique", "nra", "reglementation acoustique", "verifier", "bruit"],
+    "description": "Verifie un isolement acoustique mesure vs seuil NRA logements (arrete du 30/06/1999)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0,  "expected_sigma_added": 0.0,  "weight": 0.5},
+    "cout":         {"expected_delta_phi": 0.5,  "expected_T_added": 0.05, "expected_sigma_added": 0.0,  "weight": 0.3},
+    "maintenance":  {"expected_delta_phi": 0.4,  "expected_T_added": 0.0,  "expected_sigma_added": 0.05, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Non-conformite NRA a la reception : recours acquereur et reprise des travaux", "probabilite": 0.5, "gravite": "moyenne", "reference": "Arrete du 30/06/1999 + attestation acoustique a la reception"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Seuils logements neufs (NRA). Ne couvre pas les ERP, etablissements d'enseignement ni les hopitaux.",
+    "Compare une valeur mesuree a un seuil : ne realise pas la mesure ni le calcul previsionnel d'isolement."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

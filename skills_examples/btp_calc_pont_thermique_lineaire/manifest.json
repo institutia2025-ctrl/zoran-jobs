@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_pont_thermique_lineaire",
+    "name": "Calcul de deperdition par ponts thermiques",
+    "version": "1.0.0",
+    "hash": "sha256:7dc861df3c6bc5924125001caf1f338d64fa2edc90b4ddc23058c67ace60991f",
+    "signature": "phase-b-btp_calc_pont_thermique_lineaire",
+    "author": "Claude Code (Phase B — bloc Thermique)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "ponts": {"type": "array"}}},
+    "outputs": {"type": "object", "properties": {
+      "deperdition_ponts_w_k": {"type": "number"},
+      "detail": {"type": "array"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "thermique",
+    "triggers": ["pont thermique", "psi", "lineique", "deperdition", "liaison"],
+    "description": "Calcule la deperdition totale par ponts thermiques lineaires (NF EN ISO 14683)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.5},
+    "confort":      {"expected_delta_phi": 0.6,  "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.3},
+    "cout":         {"expected_delta_phi": 0.5,  "expected_T_added": 0.05,"expected_sigma_added": 0.0, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 10, "evenement": "Ponts thermiques non traites : condensation superficielle et risque de moisissures aux liaisons", "probabilite": 0.5, "gravite": "moyenne", "reference": "NF EN ISO 14683 + NF EN ISO 13788 (condensation)"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Somme les ponts thermiques lineaires fournis — ne calcule pas les coefficients psi eux-memes.",
+    "Les psi proviennent d'un abaque (RT/RE) ou d'un calcul aux elements finis — ils sont des donnees d'entree."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_verif_cisaillement_poutre_ec2", "name": "Verif cisaillement poutre EC2",
+               "version": "1.0.0", "hash": "sha256:1b3d8822d33a940cac897b8922cef6f324dd6d3c1c6813d9127cdaaafbab96be", "signature": "demo-sig-cisaillement-ec2",
+               "author": "Sonnet Phase B Struct 3/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object"}, "outputs": {"type": "object"}},
+  "routing": {"domain": "structure",
+              "triggers": ["cisaillement", "effort tranchant", "v_rd", "v_ed", "ec2", "§6.2", "etrier"],
+              "description": "Verif cisaillement poutre BA selon EC2 §6.2 (V_Rd,c + V_Rd,s + V_Rd,max)."},
+  "coherence": {"expected_delta_phi": 0.90, "expected_T_added": 0.03, "expected_sigma_added": 0.05, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.92, "expected_T_added": 0.03, "expected_sigma_added": 0.02, "weight": 0.35},
+    "structure":    {"expected_delta_phi": 0.92, "expected_T_added": 0.03, "expected_sigma_added": 0.05, "weight": 0.40},
+    "cout":         {"expected_delta_phi": 0.55, "expected_T_added": 0.05, "expected_sigma_added": 0.00, "weight": 0.10},
+    "maintenance":  {"expected_delta_phi": 0.35, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Revision continue EC2 et NA - coefficients C_Rd,c et ν1 susceptibles d'evoluer",
+     "probabilite": 0.55, "gravite": "moyenne", "reference": "AFNOR cycle revision EC2 + Annexe Nationale Francaise"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "θ fixe a 45° (cot θ = 1.0). Optimisation θ in [21.8°, 45°] possible (§6.2.3(2)) pour minimiser armatures - non implementee.",
+    "Pas de prise en compte : effort normal axial (cisaillement-axial §6.2.2(1) et eq.6.2.b), beton precontraint, dalles épaisses.",
+    "Pas de verification au droit des appuis (§6.2.1(8) reduction V_Ed pres appui direct).",
+    "Ne couvre PAS l'effort tranchant en zone d'extremite (boutons d'ancrage, ferraillage de torsion §6.3).",
+    "Hypothese simplifiee : poutre rectangulaire b_w constant. Pour poutre en T ou variable, calcul exact requis.",
+    "ν1 = 0.6 (§6.2.3(3) NA simplifie). Pour beton fissure ductile, ν1 = 0.6 × (1 - fck/250) en EC2 §6.2.3(3) Note 2 NA."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

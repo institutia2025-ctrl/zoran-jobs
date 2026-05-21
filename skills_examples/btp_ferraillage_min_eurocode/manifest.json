@@ -1,0 +1,33 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_ferraillage_min_eurocode", "name": "Ferraillage min EC2",
+               "version": "1.0.0", "hash": "sha256:80e80652dad5dbe2c8fb8b21a9ebaecb3c77012c10d61ad195513d071c8d316b", "signature": "demo-sig-ferraillage",
+               "author": "Sonnet Struct 5/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object", "properties": {"element": {"type": "string"}}},
+         "outputs": {"type": "object", "properties": {"As_min_mm2": {"type": "number"}}}},
+  "routing": {"domain": "structure",
+              "triggers": ["ferraillage", "armature minimum", "as min", "section min", "ec2", "§9"],
+              "description": "Calcul sections min armatures longitudinales selon EC2 §9.2 / §9.3 / §9.5."},
+  "coherence": {"expected_delta_phi": 0.80, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.30},
+    "structure":    {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.40},
+    "cout":         {"expected_delta_phi": 0.50, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.15},
+    "maintenance":  {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.20, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [],
+  "veto_capable": true,
+  "limites_explicites": [
+    "MVP : armatures LONGITUDINALES uniquement. Pas d'armatures de cisaillement (§9.2.2 etriers).",
+    "Pas de dispositions sismiques EC8 §5 (zones sismiques, classe ductilite DCM/DCH).",
+    "Ne couvre pas les armatures de peau (§9.2.4) ni les armatures de torsion.",
+    "Fck <= 50 MPa : au-dela formule fctm differente (§3.1.6(101) BHP).",
+    "Ne calcule pas la section RESISTANTE — c'est la section MIN reglementaire EC2. Verifier ELU separement."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

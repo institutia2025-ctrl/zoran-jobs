@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_verif_poinconnement_dalle_ec2", "name": "Verif poinconnement dalle EC2 §6.4",
+               "version": "1.0.0", "hash": "sha256:1c3cad16e1e5a4543357fd0e3f1eda5cc9ca3d76e833b2dee59e7f9ab30c1146", "signature": "demo-sig-poinconnement-ec2",
+               "author": "Sonnet Phase B Struct 5/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object"}, "outputs": {"type": "object"}},
+  "routing": {"domain": "structure",
+              "triggers": ["poinconnement", "punching", "dalle colonne", "ec2", "§6.4", "perimetre controle"],
+              "description": "Poinconnement dalle BA selon EC2 §6.4 (perimetres u_0 / u_1 a 2d + v_Rd,c + v_Rd,max)."},
+  "coherence": {"expected_delta_phi": 0.90, "expected_T_added": 0.03, "expected_sigma_added": 0.05, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.95, "expected_T_added": 0.03, "expected_sigma_added": 0.02, "weight": 0.40},
+    "structure":    {"expected_delta_phi": 0.92, "expected_T_added": 0.03, "expected_sigma_added": 0.05, "weight": 0.40},
+    "cout":         {"expected_delta_phi": 0.50, "expected_T_added": 0.05, "expected_sigma_added": 0.00, "weight": 0.10},
+    "maintenance":  {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05},
+    "exploitation": {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Effondrement progressif si poinconnement non maitrise (cas critique securite)",
+     "probabilite": 0.30, "gravite": "critique", "reference": "Retour experience effondrements dalles plates AQC"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "MVP : colonne rectangulaire centree (β=1.0). Pour colonnes en bord (β=1.4) ou coin (β=1.5), modifier l'input beta.",
+    "Ne couvre PAS le calcul d'armatures de poinconnement (§6.4.5) - si V_Ed > v_Rd,c × u_1 × d, le skill oriente vers BET.",
+    "Hypothese rho_lx et rho_ly fournis. Pour calculer ρ_l a partir de A_sx, A_sy, b et d : calcul preliminaire requis.",
+    "Ne traite pas les colonnes circulaires (§6.4.2(2)) ni les drop panels (epaississement local).",
+    "Ne couvre pas l'effet d'excentricite par moment de flexion (§6.4.3) - β doit etre majoré dans ce cas.",
+    "Effort V_Ed = effort ELU au droit de la colonne. Pour effort net (deduction de la reaction sol/elastique), retrancher avant input."
+  ],
+  "cost": {"runtime_cost": 3, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_accessibilite_pmr_rampe",
+    "name": "Vérification de rampe d'accès PMR",
+    "version": "1.0.0",
+    "hash": "sha256:2337493ce95aa03e741ef4e3e0227196bfbe6a9c51828feac491114881b64979",
+    "signature": "phase-b-cc-btp_verif_accessibilite_pmr_rampe",
+    "author": "Claude Code (Phase B — bloc Sécurité/Accessibilité)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "pente_pct": {"type": "number"}, "longueur_m": {"type": "number"},
+      "largeur_m": {"type": "number"}, "paliers_repos_presents": {"type": "boolean"}}},
+    "outputs": {"type": "object", "properties": {
+      "conforme": {"type": "boolean"}, "non_conformites": {"type": "array"},
+      "verdict": {"type": "string"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "accessibilite",
+    "triggers": ["rampe pmr", "accessibilite", "handicap", "pente rampe", "erp accessibilite"],
+    "description": "Vérifie la conformité d'une rampe PMR (arrêté du 8 décembre 2014)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.6},
+    "cout":         {"expected_delta_phi": 0.5, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Non-conformité accessibilité : refus d'ouverture ERP / mise en demeure / travaux de reprise", "probabilite": 0.6, "gravite": "moyenne", "reference": "Arrêté du 8 décembre 2014 + contrôle de l'attestation d'accessibilité"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Rampe rectiligne. Ne traite pas les paliers tournants ni les ressauts ponctuels.",
+    "Ne vérifie pas le garde-corps de la rampe — voir btp_verif_garde_corps_hauteur."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

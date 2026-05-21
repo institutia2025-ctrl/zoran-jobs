@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_deperdition_paroi",
+    "name": "Calcul de deperdition thermique de paroi",
+    "version": "1.0.0",
+    "hash": "sha256:885434cdffcf7ef46583fc5cb26b05c58c1fc821dd1560b7cda8c81825ed52ba",
+    "signature": "phase-b-btp_calc_deperdition_paroi",
+    "author": "Claude Code (Phase B — bloc Thermique)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "coefficient_u_w_m2k": {"type": "number"}, "resistance_m2k_w": {"type": "number"},
+      "surface_m2": {"type": "number"}, "delta_temperature_k": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "deperdition_w": {"type": "number"},
+      "coefficient_u_w_m2k": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "thermique",
+    "triggers": ["deperdition", "paroi", "flux thermique", "transmission", "calcul"],
+    "description": "Calcule le flux de deperdition par transmission d'une paroi (NF EN ISO 13789)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.7,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7,  "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.55},
+    "cout":         {"expected_delta_phi": 0.55, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.45}
+  },
+  "futur_probable": [
+    {"horizon_an": 20, "evenement": "Deperditions sous-estimees : equipement de chauffage sous-dimensionne", "probabilite": 0.4, "gravite": "moyenne", "reference": "NF EN ISO 13789"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Calcule la deperdition par transmission SURFACIQUE uniquement.",
+    "N'inclut pas les ponts thermiques (voir btp_calc_pont_thermique_lineaire) ni les deperditions par renouvellement d'air."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

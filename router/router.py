@@ -23,7 +23,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from registry.manifest import Manifest
-from runtime.coherence.engine import CoherenceState, dS_dt, delta_S
+from runtime.coherence.engine import CoherenceState, compute_S, delta_S, dS_dt
 
 
 @dataclass
@@ -35,6 +35,32 @@ class RoutingCandidate:
     delta_S: float
     bonus_cinematique: float
     cost: int
+
+
+
+# ============================================================================
+# V2 — Pre-filtre veto securite (INV-12 deterministe)
+# ============================================================================
+
+VETO_SECURITE_SEUIL = 0.15  # configurable au niveau runtime, pas du skill
+
+
+def is_veto_securite(manifest: Manifest, state: CoherenceState,
+                      seuil: float = VETO_SECURITE_SEUIL) -> bool:
+    """True si le skill V2 est BLOQUE par veto securite (route() doit l'exclure)."""
+    if not getattr(manifest, "veto_capable", False):
+        return False
+    mf = getattr(manifest, "coherence_multi_frame", None) or {}
+    sec = mf.get("securite")
+    if not isinstance(sec, dict):
+        return False
+    s_sec = compute_S(
+        state.beta,
+        state.delta_phi + float(sec.get("expected_delta_phi", 0.0)),
+        state.T + float(sec.get("expected_T_added", 0.0)),
+        state.sigma + float(sec.get("expected_sigma_added", 0.0)),
+    )
+    return s_sec < seuil
 
 
 def _trigger_pertinence(prompt: str, triggers: list[str]) -> float:
@@ -82,14 +108,19 @@ def score_skill(prompt: str, manifest: Manifest, state: CoherenceState) -> Routi
 def route(prompt: str, manifests: list[Manifest], state: CoherenceState) -> list[RoutingCandidate]:
     """Classe tous les skills par score décroissant.
 
+    V2 : pre-filtre veto_securite applique AVANT scoring. Les skills V2 dont
+    S_securite < seuil sont retires (filtre dur, pas une penalite).
+
     Les skills de score 0 (aucun trigger OU aucun gain de cohérence) sont
     EXCLUS du résultat — le Router ne route pas un skill non pertinent.
     Tri stable : à score égal, ordre alphabétique du skill_id (déterminisme).
     """
-    candidates = [score_skill(prompt, m, state) for m in manifests]
+    # V2 : filtre veto AVANT scoring
+    eligible = [m for m in manifests if not is_veto_securite(m, state)]
+    candidates = [score_skill(prompt, m, state) for m in eligible]
     retained = [c for c in candidates if c.score > 0.0]
     retained.sort(key=lambda c: (-c.score, c.skill_id))
     return retained
 
 
-__all__ = ["RoutingCandidate", "score_skill", "route"]
+__all__ = ["RoutingCandidate", "score_skill", "route", "is_veto_securite", "VETO_SECURITE_SEUIL"]

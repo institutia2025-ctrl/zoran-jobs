@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_verif_poutre_flexion", "name": "Verif poutre BA flexion simple",
+               "version": "1.0.0", "hash": "sha256:5ee5b9f977c59479623ae871d5e859e0fea80ff74f75b1d93516ea1aed21b759", "signature": "demo-sig-poutre",
+               "author": "Sonnet Struct 2/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object", "properties": {"b_mm": {"type": "integer"}}},
+         "outputs": {"type": "object", "properties": {"M_Rd_kNm": {"type": "number"}}}},
+  "routing": {"domain": "structure",
+              "triggers": ["poutre", "flexion", "ba", "moment", "verif poutre", "ec2", "eurocode 2"],
+              "description": "Verif poutre BA flexion simple section rectangulaire selon EC2 §6.1."},
+  "coherence": {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.90, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.35},
+    "structure":    {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.35},
+    "cout":         {"expected_delta_phi": 0.45, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.15},
+    "maintenance":  {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Verification de la fleche long terme (fluage + retrait, §7.4 EC2) demandee separement",
+     "probabilite": 0.85, "gravite": "moyenne", "reference": "NF EN 1992-1-1 §7.4"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "MVP : section rectangulaire pure, armatures tendues uniquement. Pas de poutre en T, ni armatures comprimees.",
+    "Bras de levier approche z=0.9d (valide si mu < 0.371). Au-dela, calcul exact diagramme rectangle requis.",
+    "Pas de verification cisaillement (§6.2 EC2). Pas de bielle ni de traction (§6.5).",
+    "Pas de calcul fleche ELS — voir EC2 §7.4 (skill separe envisage).",
+    "Fck <= 50 MPa (au-dela : BHP §3.1.6(101) avec coefficients differents)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_diag_fissure_macon",
+    "name": "Diagnostic fissure maconnerie",
+    "version": "1.0.0",
+    "hash": "sha256:bfb60bf4d5822f0bc720552d2785507147d422a39863a568f1c226003bac6c57",
+    "signature": "demo-signature-btp-diag-fissure-macon",
+    "author": "Frederic TABARY + Claude Sonnet (Pathologies 1/5)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs":  { "type": "object", "properties": { "largeur_mm": { "type": "number" } } },
+    "outputs": { "type": "object", "properties": { "structurelle_suspectee": { "type": "boolean" } } }
+  },
+  "routing": {
+    "domain": "pathologie",
+    "triggers": ["fissure", "lezarde", "macon", "diagnostic fissure", "desordre maconnerie", "DTU 20.1"],
+    "description": "Diagnostic fissure maconnerie : qualitatif DTU 20.1 + grille AQC parametrable. Niveau ingenieur pathologies."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.05,
+    "expected_sigma_added": 0.10,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite":     { "expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.35 },
+    "structure":    { "expected_delta_phi": 0.75, "expected_T_added": 0.05, "expected_sigma_added": 0.10, "weight": 0.25 },
+    "maintenance":  { "expected_delta_phi": 0.60, "expected_T_added": 0.00, "expected_sigma_added": 0.10, "weight": 0.20 },
+    "cout":         { "expected_delta_phi": 0.40, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.10 },
+    "exploitation": { "expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10 }
+  },
+  "futur_probable": [
+    {
+      "horizon_an": 5,
+      "evenement": "Aggravation si la fissure est active et non monitoree",
+      "probabilite": 0.60,
+      "gravite": "moyenne",
+      "reference": "NF DTU 20.1 §10 + retour experience AQC pathologies maconnerie"
+    },
+    {
+      "horizon_an": 20,
+      "evenement": "Si fissure structurelle non traitee : perte de capacite portante + infiltration",
+      "probabilite": 0.80,
+      "gravite": "elevee",
+      "reference": "NF DTU 20.1 §10 + NF EN 1996-1-1 (EC6) §8 durabilite maconnerie"
+    }
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Outil d'ORIENTATION DIAGNOSTIC, pas un verdict d'expertise. Une fissure structurelle suspectee impose un BET in situ.",
+    "Loi 1 stricte : ne fabrique aucun seuil mm AQC. La grille AQC doit etre fournie en input par l'utilisateur, avec source.",
+    "Ne couvre PAS les pathologies specifiques : pierre de taille, brique creuse colombage, beton precontraint, ossature bois.",
+    "Ne caracterise pas l'origine (tassement differentiel, retrait, choc, surcharge) — diagnostic d'origine demande sondage geotechnique + historique chantier.",
+    "Pas de calcul de stabilite : si structurelle_suspectee=true, deferer au BET avec descente_charges + ferraillage_min."
+  ],
+  "cost": { "runtime_cost": 2, "latency_class": "fast", "external_calls": false },
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": { "skills": [], "python": [] },
+  "rollback": { "rollbackable": true, "rollback_strategy": "none" },
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

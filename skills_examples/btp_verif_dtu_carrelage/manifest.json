@@ -1,0 +1,107 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "verif_dtu_carrelage",
+    "name": "Verification DTU 52.2 carrelage",
+    "version": "1.0.0",
+    "hash": "sha256:40a6ad43068659834c73649d65def5c88c007c66b5a1faff0111b417dc647a99",
+    "signature": "demo-signature-btp-dtu-52-2",
+    "author": "Frederic TABARY (BTP Phase A)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "planeite_2m_mm": {
+          "type": "number"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "conforme": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "routing": {
+    "domain": "construction",
+    "triggers": [
+      "dtu 52",
+      "carrelage",
+      "planeite",
+      "ceramique",
+      "revetement",
+      "pose collee"
+    ],
+    "description": "Verifie planeite + verticalite du support selon NF DTU 52.2. Niveau maitre d'oeuvre."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.55,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {
+    "runtime_cost": 1,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate",
+  "coherence_multi_frame": {
+    "exploitation": {
+      "expected_delta_phi": 0.4,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 0.3
+    },
+    "maintenance": {
+      "expected_delta_phi": 0.5,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 0.3
+    },
+    "cout": {
+      "expected_delta_phi": 0.3,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.0,
+      "weight": 0.2
+    },
+    "securite": {
+      "expected_delta_phi": 0.4,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 0.2
+    }
+  },
+  "veto_capable": false,
+  "futur_probable": [
+    {
+      "horizon_an": 10,
+      "evenement": "Decollement carreaux si planeite non respectee",
+      "probabilite": 0.6,
+      "gravite": "moyenne",
+      "reference": "DTU 52.2 §3 + retour experience AQC pose collee"
+    }
+  ],
+  "limites_explicites": [
+    "Verifie planeite et verticalite uniquement. Ne couvre PAS : choix colle, joints, classes EB+/EC du support.",
+    "Resultat = orientation. Une non-conformite necessite reprise du support, pas reprise de la pose seule."
+  ]
+}

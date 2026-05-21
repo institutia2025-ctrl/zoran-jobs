@@ -1,0 +1,36 @@
+{
+  "schema_version": "2.0",
+  "identity": {"skill_id": "btp_verif_poteau_beton", "name": "Verif poteau BA compression centree",
+               "version": "1.0.0", "hash": "sha256:b6bd4f388ba94e22ce5ac8bafc857221ec17d2ccd8a738f80722475987828ddc", "signature": "demo-sig-poteau",
+               "author": "Sonnet Struct 1/5", "created_at": "2026-05-21T00:00:00Z"},
+  "io": {"inputs": {"type": "object", "properties": {"b_mm": {"type": "integer"}}},
+         "outputs": {"type": "object", "properties": {"conforme": {"type": "boolean"}}}},
+  "routing": {"domain": "structure",
+              "triggers": ["poteau", "ba", "compression", "verif structure", "eurocode 2", "ec2", "elancement"],
+              "description": "Verif poteau BA compression centree selon EC2 §6.1 + §5.8.3.1 (ANF)."},
+  "coherence": {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "corrective": false},
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.90, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.35},
+    "structure":    {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.35},
+    "cout":         {"expected_delta_phi": 0.40, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.15},
+    "maintenance":  {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.10},
+    "exploitation": {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Re-evaluation aux versions futures de l'EC2 (ANF en revision continue)",
+     "probabilite": 0.60, "gravite": "moyenne", "reference": "NF EN 1992-1-1 + ANF revisions periodiques"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "MVP demonstratif : compression centree pure. Pas de moment, pas de flexion deviee, pas d'effets du second ordre complets.",
+    "Si elancement > 30 detecte, le skill marque non-conforme et oriente vers EC2 §5.8.3 calcul detaille (BET requis).",
+    "Hypothese alpha_cc=1.0, ANF γc=1.5 et γs=1.15. Si autre annexe nationale, ne pas utiliser.",
+    "Ne couvre pas les classes B (B500A vs B500B vs B500C) avec leurs ductilites differentes.",
+    "Pas de prise en compte de la torsion ou des effets de fluage long terme (§5.8.4 EC2)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [], "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+}

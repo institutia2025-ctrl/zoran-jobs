@@ -1,0 +1,64 @@
+# ZORAN's Jobs — CI: rejoue les 85 assertions à chaque push.
+# Mission ZORAN_JOBS_20260521 · falsifiabilité = preuve continue, pas snapshot.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  full-suite:
+    name: ${{ matrix.os }} · Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Show interpreter
+        run: python --version
+      - name: test_registry (15)
+        run: python tests/test_registry.py
+      - name: test_runtime_loop (14)
+        run: python tests/test_runtime_loop.py
+      - name: test_cinematique (13)
+        run: python tests/test_cinematique.py
+      - name: test_oracle (10)
+        run: python tests/test_oracle.py
+      - name: test_immune (18)
+        run: python tests/test_immune.py
+      - name: massive_validation stress (15)
+        run: python tests/stress/massive_validation.py
+      - name: test_contract_v2 (20)
+        run: python tests/test_contract_v2.py
+      - name: test_btp_structure_avancee (39)
+        run: python tests/test_btp_structure_avancee.py
+      - name: test_btp_structure (26)
+        run: python tests/test_btp_structure.py
+      - name: test_btp_pathologies (25)
+        run: python tests/test_btp_pathologies.py
+      - name: test_btp_skills (22)
+        run: python tests/test_btp_skills.py
+      - name: test_coherence_unit (12)
+        run: python tests/test_coherence_unit.py
+      - name: test_btp_phase_b (55)
+        run: python tests/test_btp_phase_b.py
+
+  lint:
+    name: ruff lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install ruff
+      - run: ruff check .

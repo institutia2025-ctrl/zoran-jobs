@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_resistance_thermique",
+    "name": "Calcul de resistance thermique de paroi",
+    "version": "1.0.0",
+    "hash": "sha256:08cb291dfeb1c32d3caaaaf54651a16aa9cebce400f0efeed5cf8cab7384b8bd",
+    "signature": "phase-b-btp_calc_resistance_thermique",
+    "author": "Claude Code (Phase B — bloc Thermique)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "couches": {"type": "array"}, "rsi": {"type": "number"}, "rse": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "resistance_totale_m2k_w": {"type": "number"},
+      "coefficient_u_w_m2k": {"type": "number"},
+      "detail": {"type": "array"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "thermique",
+    "triggers": ["resistance thermique", "paroi", "calcul r", "isolation", "coefficient u"],
+    "description": "Calcule la resistance thermique R et le coefficient U d'une paroi multicouche (NF EN ISO 6946)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.75, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.5},
+    "cout":         {"expected_delta_phi": 0.55, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.3},
+    "confort":      {"expected_delta_phi": 0.65, "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Isolation sous-dimensionnee : inconfort thermique et surconsommation de chauffage", "probabilite": 0.45, "gravite": "moyenne", "reference": "NF EN ISO 6946 + exigences RE2020"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Calcule R en parois courantes opaques homogenes. Ne traite PAS les lames d'air non ventilees ni les heterogeneites laterales (methode des isothermes).",
+    "Les conductivites lambda doivent etre fournies (valeurs certifiees ACERMI ou fiche produit) — le skill ne les invente pas."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
