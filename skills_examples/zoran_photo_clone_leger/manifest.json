@@ -1,0 +1,52 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "zoran_photo_clone_leger",
+    "name": "Photo-clone léger et restauration ciblée",
+    "version": "1.0.0",
+    "hash": "sha256:f7344d0059b6ec4646c70d61d1b8d55d8efb679cac832fcd5ed5b9a7e522a258",
+    "signature": "zoran-meta-photo_clone_leger",
+    "author": "Claude Code (skill méta — sauvegarde)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "fichiers": {"type": "array"}, "photo_reference": {"type": "object"}}},
+    "outputs": {"type": "object", "properties": {
+      "photo": {"type": "object"}, "identique_a_reference": {"type": "boolean"},
+      "restauration_ciblee": {"type": "array"}, "nb_a_restaurer": {"type": "number"},
+      "gain_ciblage_pct": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "sauvegarde",
+    "triggers": ["photo clone", "snapshot leger", "restauration ciblee", "sauvegarde", "empreinte fichiers"],
+    "description": "Produit une photo hyper-légère (empreintes seules) et le plan de restauration ciblée par diff déterministe."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global":      {"expected_delta_phi": 0.8,  "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.5},
+    "maintenance": {"expected_delta_phi": 0.75, "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.3},
+    "cout":        {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Sans photo de référence légère, toute régression impose une restauration lourde (clone froid complet) au lieu d'une restauration ciblée", "probabilite": 0.5, "gravite": "moyenne", "reference": "Discipline de sauvegarde — restauration ciblée vs restauration complète"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Le skill PRODUIT la photo et le PLAN de restauration ciblée. Il ne stocke pas les contenus et ne réécrit aucun fichier — un skill du runtime est une fonction pure. Le magasin de contenus et l'écriture relèvent du harnais.",
+    "Loi 1 : le skill ne calcule pas les empreintes des contenus — elles sont fournies (sha256 de chaque fichier).",
+    "La photo capture {chemin, empreinte, taille} : elle détecte les changements de contenu, pas les changements de permissions ou de métadonnées hors taille."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
