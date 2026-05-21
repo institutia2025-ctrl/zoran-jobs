@@ -2,6 +2,33 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.10.0-agentic-bridge-cc] — 2026-05-22
+
+### Ajouté — mission `ZORAN_ORACLE_AGENTIC_BRIDGE_20260522` (7 livrables)
+
+Couche « cerveau » plug-and-play branchant l'oracle `zoran_oracle_adaptation_agents`
+sur les orchestrateurs agentiques existants — **sans réécrire** LangGraph,
+CrewAI ni AutoGen. Positionnement : ZORAN = cerveau (cohérence, veto, arrêt
+cohérent) ; les frameworks = muscles (exécution, graphes, agents, retries).
+
+- `specs/AGENTIC_BRIDGE_SPEC.md` — architecture du bridge : 3 couches
+  (moteur / bridge / cerveau), flux oracle↔agents, veto runtime, delta,
+  budgets, arrêt. 7 invariants (AB-1..AB-7).
+- `examples/LANGGRAPH_ADAPTER.md` — l'oracle comme fonction de routage d'une
+  arête conditionnelle `add_conditional_edges`.
+- `examples/CREWAI_ADAPTER.md` — l'oracle comme boucle de lots autour de
+  `crew.kickoff()`, transmettant veto / verdicts / budget au Crew.
+- `audit/STOP_CRITERIA.md` — arrêt classique (max_iterations, timeout, « LLM
+  dit stop ») vs arrêt ZORAN (5 verdicts falsifiables) ; maillon faible nommé.
+- `examples/minimal_agent_harness.py` — boucle réelle pilotée par l'oracle,
+  43 lignes, exécutable, ruff OK (moteur exécute, oracle décide).
+- `audit/MULTI_IA_GOVERNANCE.md` — rôles, territoires disjoints, veto,
+  rollback, traces. Règle : Codex ≠ Claude ≠ GPT ≠ DeepSeek.
+- `audit/LOW_TOKEN_AGENTIC.md` — coût cognitif de la boucle : l'appel oracle
+  est gratuit (fonction locale), le coût est dans les agents LLM.
+
+Aucun fichier gelé modifié, aucun framework réécrit, aucune dépendance ajoutée.
+
 ## [v0.9.2-video-cc] — 2026-05-22
 
 ### Ajouté — skill méta `zoran_video_publication_planner`
