@@ -1,0 +1,52 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_charge_neige",
+    "name": "Calcul de charge de neige sur toiture",
+    "version": "1.0.0",
+    "hash": "sha256:7e3986dfd8c7f8f4acfcee25559e25efbb8f3350f057375a6124f492f0af6117",
+    "signature": "phase-b-cc-btp_calc_charge_neige",
+    "author": "Claude Code (Phase B — bloc Charges)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "charge_sol_sk_kn_m2": {"type": "number"}, "angle_toiture_deg": {"type": "number"},
+      "coef_exposition": {"type": "number"}, "coef_thermique": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "charge_neige_kn_m2": {"type": "number"}, "mu_forme": {"type": "number"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "structure",
+    "triggers": ["charge de neige", "neige toiture", "eurocode 1", "ec1", "action climatique"],
+    "description": "Calcule la charge de neige sur toiture a versant unique (NF EN 1991-1-3)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8,
+    "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite":  {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.4},
+    "structure": {"expected_delta_phi": 0.85, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.4},
+    "cout":      {"expected_delta_phi": 0.5,  "expected_T_added": 0.1,  "expected_sigma_added": 0.0,  "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 50, "evenement": "Charge de neige sous-estimee : ruine de toiture sous chute exceptionnelle", "probabilite": 0.3, "gravite": "elevee", "reference": "NF EN 1991-1-3 §5 + retour sinistralite toitures"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Toiture a versant unique, coefficient de forme mu1 (NF EN 1991-1-3 §5.3.2). Ne traite pas les accumulations (redans, obstacles, toitures multiples).",
+    "Loi 1 : sk (charge au sol) depend de la region/altitude et est fourni par l'appelant (carte de l'Annexe Nationale) — jamais invente.",
+    "Ne traite pas la neige glissante ni les charges exceptionnelles (situation accidentelle EN 1991-1-3 §3.3)."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_affaiblissement_acoustique",
+    "name": "Calcul d'affaiblissement acoustique (loi de masse)",
+    "version": "1.0.0",
+    "hash": "sha256:cccae4c849922952f4250960d72f78e83bc2f28d3e8990c607d837e4c1e58772",
+    "signature": "phase-b-cc-btp_calc_affaiblissement_acoustique",
+    "author": "Claude Code (Phase B — bloc Acoustique)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "masse_surfacique_kg_m2": {"type": "number"}, "frequence_hz": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "affaiblissement_db": {"type": "number"}, "domaine": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "acoustique",
+    "triggers": ["affaiblissement acoustique", "loi de masse", "isolation phonique", "paroi", "decibel"],
+    "description": "Estime l'indice d'affaiblissement R d'une paroi simple par la loi de masse (NF EN 12354-1)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.6},
+    "maintenance":  {"expected_delta_phi": 0.4,  "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Affaiblissement sous-estime : plaintes de voisinage et inconfort acoustique", "probabilite": 0.4, "gravite": "faible", "reference": "Loi de masse + NF EN 12354-1"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Loi de masse seule : valable dans la zone gouvernee par la masse, hors frequence critique (coincidence) et resonances.",
+    "Ne traite pas les parois doubles (masse-ressort-masse) ni les transmissions laterales (flanking)."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

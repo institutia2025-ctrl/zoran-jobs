@@ -128,6 +128,67 @@ check("pont_thermique : liste vide → ValueError", raises_value_error(run, {"po
 check("pont_thermique : manifest V2 valide", manifest_v2_ok("btp_calc_pont_thermique_lineaire"))
 
 # ===========================================================================
+# BLOC ACOUSTIQUE — 2 skills
+# ===========================================================================
+print("\n[Bloc Acoustique]")
+
+# --- btp_calc_affaiblissement_acoustique ---
+run = run_of("btp_calc_affaiblissement_acoustique")
+# m=250 kg/m², f=500 Hz → R = 20·log10(125000) − 47 = 54.9 dB
+r = run({"masse_surfacique_kg_m2": 250, "frequence_hz": 500})
+check("affaiblissement : R ≈ 54.9 dB (calcul main)", abs(r["affaiblissement_db"] - 54.9) < 0.1)
+check("affaiblissement : masse nulle → ValueError",
+      raises_value_error(run, {"masse_surfacique_kg_m2": 0, "frequence_hz": 500}))
+
+# --- btp_verif_isolement_acoustique_reglementaire ---
+run = run_of("btp_verif_isolement_acoustique_reglementaire")
+check("isolement : mur 55 dB >= 53 → conforme",
+      run({"type_paroi": "mur_entre_logements", "isolement_mesure_db": 55})["conforme"] is True)
+check("isolement : choc 60 dB > 58 → non conforme",
+      run({"type_paroi": "plancher_choc", "isolement_mesure_db": 60})["conforme"] is False)
+check("isolement : choc 50 dB <= 58 → conforme",
+      run({"type_paroi": "plancher_choc", "isolement_mesure_db": 50})["conforme"] is True)
+check("isolement : type de paroi inconnu → ValueError",
+      raises_value_error(run, {"type_paroi": "xxx", "isolement_mesure_db": 55}))
+
+# ===========================================================================
+# BLOC CHARGES / ENVELOPPE — 3 skills
+# ===========================================================================
+print("\n[Bloc Charges / Enveloppe]")
+
+# --- btp_calc_charge_neige ---
+run = run_of("btp_calc_charge_neige")
+# sk=0.65, angle=20° → μ1=0.8 → s = 0.8 × 1 × 1 × 0.65 = 0.52 kN/m²
+r = run({"charge_sol_sk_kn_m2": 0.65, "angle_toiture_deg": 20})
+check("charge_neige : s = 0.52 kN/m² (calcul main, μ1=0.8)",
+      abs(r["charge_neige_kn_m2"] - 0.52) < 0.001 and abs(r["mu_forme"] - 0.8) < 0.001)
+# angle=45° → μ1 = 0.8 × (60−45)/30 = 0.4 → s = 0.26
+r2 = run({"charge_sol_sk_kn_m2": 0.65, "angle_toiture_deg": 45})
+check("charge_neige : angle 45° → μ1=0.4, s=0.26", abs(r2["charge_neige_kn_m2"] - 0.26) < 0.001)
+check("charge_neige : sk négatif → ValueError",
+      raises_value_error(run, {"charge_sol_sk_kn_m2": -1, "angle_toiture_deg": 20}))
+check("charge_neige : veto_capable (skill structure)",
+      _reg.get("btp_calc_charge_neige").veto_capable is True)
+
+# --- btp_calc_charge_exploitation_plancher ---
+run = run_of("btp_calc_charge_exploitation_plancher")
+# catégorie B (bureaux) qk=2.5 kN/m², surface 20 m² → total = 50 kN
+r = run({"categorie": "B", "surface_m2": 20})
+check("charge_exploitation : B → qk=2.5, total=50 kN (calcul main)",
+      r["charge_repartie_qk_kn_m2"] == 2.5 and abs(r["charge_totale_repartie_kn"] - 50.0) < 0.01)
+check("charge_exploitation : catégorie inconnue → ValueError",
+      raises_value_error(run, {"categorie": "Z", "surface_m2": 20}))
+
+# --- btp_verif_etancheite_air_re2020 ---
+run = run_of("btp_verif_etancheite_air_re2020")
+check("etancheite : maison Q4=0.5 <= 0.6 → conforme",
+      run({"type_batiment": "maison_individuelle", "q4pa_surf_mesure": 0.5})["conforme"] is True)
+check("etancheite : maison Q4=0.8 > 0.6 → non conforme",
+      run({"type_batiment": "maison_individuelle", "q4pa_surf_mesure": 0.8})["conforme"] is False)
+check("etancheite : type de bâtiment inconnu → ValueError",
+      raises_value_error(run, {"type_batiment": "bureau", "q4pa_surf_mesure": 0.5}))
+
+# ===========================================================================
 print()
 print("=" * 60)
 print(f"=== RESULTAT : {PASS} PASS / {FAIL} FAIL ===")

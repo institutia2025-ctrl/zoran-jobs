@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_etancheite_air_re2020",
+    "name": "Verification de permeabilite a l'air RE2020",
+    "version": "1.0.0",
+    "hash": "sha256:a10985685cfd8362225706485cf21409fae44166152f056c5591661f6f57cf25",
+    "signature": "phase-b-cc-btp_verif_etancheite_air_re2020",
+    "author": "Claude Code (Phase B — bloc Enveloppe)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "type_batiment": {"type": "string"}, "q4pa_surf_mesure": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "conforme": {"type": "boolean"}, "q4pa_surf_mesure": {"type": "number"},
+      "seuil_re2020": {"type": "number"}, "marge": {"type": "number"},
+      "verdict": {"type": "string"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "thermique",
+    "triggers": ["permeabilite a l'air", "etancheite a l'air", "infiltrometrie", "q4pa", "re2020"],
+    "description": "Verifie la permeabilite a l'air Q4Pa-surf vs seuil RE2020 (NF EN ISO 9972)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0,  "expected_sigma_added": 0.0,  "weight": 0.5},
+    "cout":         {"expected_delta_phi": 0.5, "expected_T_added": 0.05, "expected_sigma_added": 0.0,  "weight": 0.3},
+    "maintenance":  {"expected_delta_phi": 0.4, "expected_T_added": 0.0,  "expected_sigma_added": 0.05, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 5, "evenement": "Permeabilite non conforme : surconsommation de chauffage, inconfort et non-atteinte des exigences RE2020", "probabilite": 0.5, "gravite": "moyenne", "reference": "RE2020 — exigence de permeabilite a l'air de l'enveloppe"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Seuils maison individuelle et logement collectif. Ne traite pas les batiments tertiaires (exigences distinctes).",
+    "Compare une valeur mesuree a un seuil : le Q4Pa-surf resulte du test d'infiltrometrie in situ, non calcule par le skill."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
