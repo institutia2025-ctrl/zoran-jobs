@@ -2,6 +2,25 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.9.1-oracle-cc] — 2026-05-22
+
+### Ajouté — skill méta `zoran_oracle_adaptation_agents`
+
+Oracle déterministe d'orchestration : à chaque cycle d'un projet long, il
+dimensionne le nombre d'agents à mobiliser (locaux gratuits d'abord, puis API
+plafonnés par le budget restant) et décide du réveil ou de l'arrêt. 5 verdicts
+en priorité stricte : `TERMINE`, `STOP_INCOHERENCE`, `STOP_BUDGET`,
+`STOP_RESSOURCE`, `CONTINUER`. Journal cumulatif par cycle.
+
+Honnêteté de cadrage : « ne jamais s'arrêter » au sens naïf est un anti-objectif
+(emballement) — l'oracle tourne jusqu'à un arrêt *cohérent*. Le « wake-up
+permanent », le serveur léger qui l'héberge et le pilotage depuis un téléphone
+sont du harnais agentique, hors périmètre d'un skill (fonction pure, sans
+réseau ni process — invariant runtime).
+
+### Tests
+- `tests/test_zoran_oracle_adaptation.py` (27) — ajouté au workflow CI.
+
 ## [v0.9.0-phase-b-cc] — 2026-05-22
 
 ### Ajouté — Phase B lot Claude Code : 35 skills BTP + 5 skills méta + 8 specs
