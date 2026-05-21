@@ -2,6 +2,48 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.9.0-phase-b-cc] — 2026-05-22
+
+### Ajouté — Phase B lot Claude Code : 35 skills BTP + 5 skills méta + 8 specs
+
+**35 skills BTP V2** (lot Claude Code, hors 20/80 Sonnet — préfixes disjoints,
+branche dédiée) répartis en 8 blocs : Thermique (4), Acoustique (2), Charges (3),
+VRD (3), Enveloppe/Sécurité (5), Économie/CVC (3), Charpente bois/Géotechnique (5),
+Électricité/Plomberie (5), Confort thermique/Réglementation (5). Tous V2
+(multi-cadres, `futur_probable` référencé, `limites_explicites`), calculs vérifiés
+à la main, références publiques (DTU, Eurocodes, NF C 15-100, RE2020, NF EN 13501-2…).
+
+**5 skills méta**
+- `zoran_gate_progression_coherente` — barrière de progression (discipline de ticket).
+- `zoran_selecteur_lois_cadres` — sélection des 11 lois du Codex Zoran + cadres.
+- `zoran_photo_clone_leger` — photo hyper-légère d'état + restauration ciblée.
+- `zoran_magasin_contenu_adressable` — magasin adressé par contenu (le coffre).
+- `zoran_ai_environment_orchestrator` — audit machine + recommandation IA (V1 SAFE).
+
+**8 specs Meta Orchestrator** (`specs/` + `audit/`) — orchestrateur de cohérence
+distribuée, low-token, multi-cadres : META_ORCHESTRATOR, FRAME_ROUTER, TOKEN_BUDGET,
+GLOBAL_VETO, DELTA_TRANSMISSION, ZORAN_JOBS_DISTRIBUTION, INTER_AGENT_CONFLICTS,
+LOW_TOKEN_STRATEGY. Aucun code (invariants d'abord).
+
+### Discipline anti-inflation
+- `transmission/AI_READING_DISCIPLINE.md` — lire le dépôt sans rien inventer
+  (séparer fait / revendication, rendu adversarial obligatoire).
+- `audit/LIMITES_ET_DETTE.md` — limites, coûts et dette assumés sans fard.
+- README dépromotionnalisé : badge d'assertions figé et note « 20/20 ciblé »
+  (non falsifiable) retirés.
+
+### Tests
+- `tests/test_btp_phase_b.py` (104) + `test_zoran_meta_skills.py` (16),
+  `test_zoran_photo_clone.py` (13), `test_zoran_magasin_contenu.py` (13),
+  `test_zoran_ai_environment.py` (12).
+- Suite complète : **377 PASS / 0 FAIL** sur 16 suites. Ruff : All checks passed.
+
+### Corrigé
+- Collision de trigger : `plu` (Plan Local d'Urbanisme) matchait en sous-chaîne
+  le mot « plugh » d'un prompt-test de `test_runtime_loop` → triggers reformulées
+  en termes longs. Régression détectée par le test — scénario E3 explicitement
+  prévu par `audit/LIMITES_ET_DETTE.md` : la falsifiabilité a fonctionné.
+
 ## [v0.8.0-phase-b-sonnet-structure-avancee] — 2026-05-21
 
 ### Ajouté — 5 skills Phase B Structure avancée (qualité maxi, S > 0.7 partout)
