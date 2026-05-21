@@ -1,0 +1,8 @@
+# Fins de ligne en LF sur toutes les plateformes de clonage (Windows compris).
+#
+# Pourquoi c'est critique ici : le runtime vérifie le sha256 de chaque
+# skill.py avant de le charger (invariant INV-4). Si un clone Windows
+# convertissait les fichiers en CRLF, leurs octets changeraient, leur hash
+# ne correspondrait plus au manifest, et le Loader refuserait de charger.
+# LF partout = hash stables = runtime transmissible et portable.
+* text=auto eol=lf
