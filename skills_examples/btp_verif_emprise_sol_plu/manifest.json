@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_emprise_sol_plu",
+    "name": "Vérification d'emprise au sol (PLU)",
+    "version": "1.0.0",
+    "hash": "sha256:3fd4e311f9f8ec0b2fcf58f1e311f0eb08ed75d154b6103f14a0f24c41f31077",
+    "signature": "phase-b-cc-btp_verif_emprise_sol_plu",
+    "author": "Claude Code (Phase B — bloc Réglementation)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "emprise_au_sol_m2": {"type": "number"}, "surface_terrain_m2": {"type": "number"},
+      "ces_max": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "ratio_emprise": {"type": "number"}, "emprise_max_autorisee_m2": {"type": "number"},
+      "conforme": {"type": "boolean"}, "verdict": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "reglementation",
+    "triggers": ["emprise au sol", "plu", "ces", "coefficient emprise", "urbanisme"],
+    "description": "Vérifie l'emprise au sol vs le coefficient d'emprise au sol du PLU."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global": {"expected_delta_phi": 0.7,  "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.6},
+    "cout":   {"expected_delta_phi": 0.55, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Emprise au sol dépassée : refus de permis de construire ou mise en demeure", "probabilite": 0.5, "gravite": "elevee", "reference": "Plan Local d'Urbanisme — règlement de zone"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Vérifie le seul ratio d'emprise au sol. Ne vérifie ni hauteur, prospects, recul, stationnement, espaces verts, ni les servitudes.",
+    "Loi 1 : le CES_max provient du règlement du PLU de la zone."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

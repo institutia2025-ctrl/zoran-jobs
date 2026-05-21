@@ -1,0 +1,48 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_facteur_solaire_apport",
+    "name": "Apport solaire d'une baie vitrée",
+    "version": "1.0.0",
+    "hash": "sha256:9032abd1e2a0e6115392fbd51f02508fb7c83af4980391269f0bd669894fa9ce",
+    "signature": "phase-b-cc-btp_calc_facteur_solaire_apport",
+    "author": "Claude Code (Phase B — bloc Confort thermique)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "surface_vitrage_m2": {"type": "number"}, "facteur_solaire_g": {"type": "number"},
+      "irradiation_w_m2": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "apport_solaire_w": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "thermique",
+    "triggers": ["apport solaire", "facteur solaire", "baie vitree", "confort ete", "surchauffe"],
+    "description": "Calcule l'apport solaire instantané transmis par une baie vitrée (facteur solaire g)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.55},
+    "carbone":      {"expected_delta_phi": 0.5,  "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.45}
+  },
+  "futur_probable": [
+    {"horizon_an": 5, "evenement": "Apport solaire non maîtrisé : surchauffe estivale, inconfort et recours à la climatisation", "probabilite": 0.5, "gravite": "moyenne", "reference": "Confort d'été RE2020 (indicateur de degrés-heures DH)"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Apport instantané d'une baie, sans protection solaire mobile ni masques.",
+    "Ne calcule pas le risque de surchauffe global (indicateur DH RE2020) — il faudrait l'inertie, la ventilation et l'occultation.",
+    "Loi 1 : g (fiche du vitrage) et l'irradiation sont fournis."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

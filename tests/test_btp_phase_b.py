@@ -453,6 +453,65 @@ check("débit EF : 0 appareil → ValueError",
       raises_value_error(run, {"debit_brut_total_l_s": 2.0, "nombre_appareils": 0}))
 
 # ===========================================================================
+# BLOC CONFORT THERMIQUE / REGLEMENTATION — 5 skills
+# ===========================================================================
+print("\n[Bloc Confort thermique / Réglementation]")
+
+# --- btp_calc_besoin_chauffage_estimatif ---
+run = run_of("btp_calc_besoin_chauffage_estimatif")
+# 200 W/K × 2500 DJU × 24 / 1000 = 12000 kWh/an
+r = run({"deperditions_totales_w_k": 200, "dju": 2500})
+check("besoin chauffage : 12 000 kWh/an (calcul main)",
+      abs(r["besoin_chauffage_kwh_an"] - 12000.0) < 0.1)
+check("besoin chauffage : déperditions nulles → ValueError",
+      raises_value_error(run, {"deperditions_totales_w_k": 0, "dju": 2500}))
+
+# --- btp_calc_surface_taxable ---
+run = run_of("btp_calc_surface_taxable")
+# 150 − 10 − 5 = 135 m²
+r = run({"surface_close_couverte_m2": 150, "surface_sous_1m80_m2": 10,
+         "surface_vides_tremies_m2": 5})
+check("surface taxable : 135 m² (calcul main)", abs(r["surface_taxable_m2"] - 135.0) < 0.01)
+check("surface taxable : déductions > surface → ValueError",
+      raises_value_error(run, {"surface_close_couverte_m2": 100,
+                               "surface_sous_1m80_m2": 80, "surface_vides_tremies_m2": 30}))
+
+# --- btp_verif_emprise_sol_plu ---
+run = run_of("btp_verif_emprise_sol_plu")
+# emprise 120 / terrain 500 = 0.24 ≤ CES 0.30 → conforme, emprise max 150 m²
+r = run({"emprise_au_sol_m2": 120, "surface_terrain_m2": 500, "ces_max": 0.30})
+check("emprise PLU : ratio 0.24 conforme, emprise max 150 m²",
+      r["conforme"] is True and abs(r["emprise_max_autorisee_m2"] - 150.0) < 0.01)
+check("emprise PLU : emprise 200 m² → non conforme",
+      run({"emprise_au_sol_m2": 200, "surface_terrain_m2": 500,
+           "ces_max": 0.30})["conforme"] is False)
+check("emprise PLU : CES hors ]0,1] → ValueError",
+      raises_value_error(run, {"emprise_au_sol_m2": 120, "surface_terrain_m2": 500,
+                               "ces_max": 1.5}))
+
+# --- btp_calc_facteur_solaire_apport ---
+run = run_of("btp_calc_facteur_solaire_apport")
+# 2 m² × g 0.5 × 400 W/m² = 400 W
+r = run({"surface_vitrage_m2": 2, "facteur_solaire_g": 0.5, "irradiation_w_m2": 400})
+check("apport solaire : 400 W (calcul main)", abs(r["apport_solaire_w"] - 400.0) < 0.01)
+check("apport solaire : facteur g hors ]0,1] → ValueError",
+      raises_value_error(run, {"surface_vitrage_m2": 2, "facteur_solaire_g": 1.5,
+                               "irradiation_w_m2": 400}))
+
+# --- btp_verif_resistance_feu_element ---
+run = run_of("btp_verif_resistance_feu_element")
+# REI 90 couvre EI 60 (critères + durée)
+r = run({"classement_element": "REI 90", "exigence": "EI 60"})
+check("résistance feu : REI 90 conforme à EI 60 (marge +30 min)",
+      r["conforme"] is True and r["marge_min"] == 30)
+check("résistance feu : EI 30 ne couvre pas REI 60 (critère R manquant)",
+      run({"classement_element": "EI 30", "exigence": "REI 60"})["conforme"] is False)
+check("résistance feu : REI 30 < REI 60 (durée insuffisante) → non conforme",
+      run({"classement_element": "REI 30", "exigence": "REI 60"})["conforme"] is False)
+check("résistance feu : classement vide → ValueError",
+      raises_value_error(run, {"classement_element": "", "exigence": "EI 60"}))
+
+# ===========================================================================
 print()
 print("=" * 60)
 print(f"=== RESULTAT : {PASS} PASS / {FAIL} FAIL ===")

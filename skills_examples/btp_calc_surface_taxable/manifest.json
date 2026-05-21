@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_surface_taxable",
+    "name": "Calcul de la surface taxable",
+    "version": "1.0.0",
+    "hash": "sha256:505024607b033b68faf4b0c665fb8ec80b56a00e71093e9b3469c40e591ad30d",
+    "signature": "phase-b-cc-btp_calc_surface_taxable",
+    "author": "Claude Code (Phase B — bloc Réglementation)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "surface_close_couverte_m2": {"type": "number"},
+      "surface_sous_1m80_m2": {"type": "number"},
+      "surface_vides_tremies_m2": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "surface_taxable_m2": {"type": "number"}, "deductions_m2": {"type": "number"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "reglementation",
+    "triggers": ["surface taxable", "taxe d'amenagement", "urbanisme", "permis de construire", "assiette"],
+    "description": "Calcule la surface taxable (assiette de la taxe d'aménagement, Code de l'urbanisme)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "cout":         {"expected_delta_phi": 0.65, "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.6},
+    "exploitation": {"expected_delta_phi": 0.5,  "expected_T_added": 0.0, "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Surface taxable mal calculée : taxe erronée, redressement et pénalités", "probabilite": 0.35, "gravite": "moyenne", "reference": "Code de l'urbanisme — taxe d'aménagement"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Calcule l'assiette de surface. Ne calcule pas le montant de la taxe (valeur forfaitaire au m², taux, abattements, exonérations).",
+    "Loi 1 : les surfaces mesurées sont fournies."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
