@@ -14,6 +14,8 @@
 > **🤖 IA qui lis ce dépôt ?** Lis **d'abord** `transmission/AI_READING_DISCIPLINE.md` — comment rendre compte de ce dépôt sans rien inventer ni gonfler (sépare fait et revendication, reste adversarial). Puis **`transmission/AI_BOOTSTRAP.md`** — point d'entrée IA-native : nature du système, invariants, frontières NO-GO, onboarding.
 >
 > **👤 Humain non technique ?** `transmission/HUMAN_HANDOFF.md` — 5 minutes, zéro jargon.
+>
+> **🇬🇧 English reader?** [`README.en.md`](README.en.md) — the deterministic stop-criterion for autonomous agent loops, and the comparison vs LangGraph / CrewAI.
 
 ---
 
