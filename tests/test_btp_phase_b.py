@@ -289,6 +289,229 @@ check("degagement : veto_capable (sécurité évacuation)",
       _reg.get("btp_verif_degagement_incendie").veto_capable is True)
 
 # ===========================================================================
+# BLOC ECONOMIE / CVC — 3 skills
+# ===========================================================================
+print("\n[Bloc Économie / CVC]")
+
+# --- btp_calc_revision_prix ---
+run = run_of("btp_calc_revision_prix")
+# P0=100000, a=0.125, I0=100, I=110 → coef = 0.125 + 0.875×1.1 = 1.0875 → 108750
+r = run({"prix_initial_eur": 100000, "terme_fixe": 0.125,
+         "index_initial": 100, "index_courant": 110})
+check("revision_prix : prix révisé = 108 750 € (calcul main)",
+      abs(r["prix_revise_eur"] - 108750.0) < 0.01)
+check("revision_prix : terme fixe hors [0,1] → ValueError",
+      raises_value_error(run, {"prix_initial_eur": 100000, "terme_fixe": 1.5,
+                               "index_initial": 100, "index_courant": 110}))
+
+# --- btp_calc_situation_travaux ---
+run = run_of("btp_calc_situation_travaux")
+# marché 200000, avancement 40%, RG 5% → travaux 80000, retenue 4000, dû 76000
+r = run({"montant_marche_ht": 200000, "avancement_pct": 40})
+check("situation : travaux 80 000 €, retenue 4 000 €, acompte 76 000 € (calcul main)",
+      abs(r["travaux_realises_ht"] - 80000.0) < 0.01
+      and abs(r["retenue_garantie_ht"] - 4000.0) < 0.01
+      and abs(r["acompte_periode_ht"] - 76000.0) < 0.01)
+check("situation : avancement > 100 → ValueError",
+      raises_value_error(run, {"montant_marche_ht": 200000, "avancement_pct": 150}))
+
+# --- btp_calc_debit_ventilation_vmc ---
+run = run_of("btp_calc_debit_ventilation_vmc")
+check("vmc : 4 pièces → 90 m³/h",
+      run({"nb_pieces_principales": 4})["debit_global_minimal_m3h"] == 90)
+check("vmc : 1 pièce → 35 m³/h",
+      run({"nb_pieces_principales": 1})["debit_global_minimal_m3h"] == 35)
+check("vmc : 7 pièces → 135 m³/h",
+      run({"nb_pieces_principales": 7})["debit_global_minimal_m3h"] == 135)
+check("vmc : 0 pièce → ValueError",
+      raises_value_error(run, {"nb_pieces_principales": 0}))
+
+# ===========================================================================
+# BLOC CHARPENTE BOIS / GEOTECHNIQUE — 5 skills
+# ===========================================================================
+print("\n[Bloc Charpente bois / Géotechnique]")
+
+# --- btp_verif_solive_bois_flexion ---
+run = run_of("btp_verif_solive_bois_flexion")
+# b=75 h=200 entraxe=0.5 portée=4 charge=2.5 → q=1.25, M=2.5 kN·m, W=5e5, σ=5.0 MPa
+r = run({"b_mm": 75, "h_mm": 200, "entraxe_m": 0.5, "portee_m": 4.0,
+         "charge_surfacique_kn_m2": 2.5, "fm_d_mpa": 14})
+check("solive bois : σ = 5.0 MPa, M = 2.5 kN·m (calcul main)",
+      abs(r["contrainte_flexion_mpa"] - 5.0) < 0.01
+      and abs(r["moment_max_kn_m"] - 2.5) < 0.01)
+check("solive bois : conforme (5.0 <= 14 MPa)", r["conforme"] is True)
+check("solive bois : section nulle → ValueError",
+      raises_value_error(run, {"b_mm": 0, "h_mm": 200, "entraxe_m": 0.5, "portee_m": 4.0,
+                               "charge_surfacique_kn_m2": 2.5, "fm_d_mpa": 14}))
+
+# --- btp_calc_fleche_solive_bois ---
+run = run_of("btp_calc_fleche_solive_bois")
+# même solive, E=11000 → f ≈ 7.576 mm, limite L/300 = 13.33 mm
+r = run({"b_mm": 75, "h_mm": 200, "entraxe_m": 0.5, "portee_m": 4.0,
+         "charge_surfacique_kn_m2": 2.5, "module_e_mpa": 11000})
+check("flèche solive : f ≈ 7.576 mm (calcul main)", abs(r["fleche_mm"] - 7.576) < 0.01)
+check("flèche solive : conforme (7.58 < L/300 = 13.33 mm)", r["conforme"] is True)
+
+# --- btp_calc_compression_poteau_bois ---
+run = run_of("btp_calc_compression_poteau_bois")
+# b=150 h=150 N=100 kN → A=22500, σ = 100000/22500 = 4.444 MPa
+r = run({"b_mm": 150, "h_mm": 150, "N_Ed_kN": 100, "fc_0_d_mpa": 21})
+check("poteau bois : σ ≈ 4.444 MPa (calcul main)",
+      abs(r["contrainte_compression_mpa"] - 4.444) < 0.01)
+check("poteau bois : conforme (4.44 <= 21 MPa)", r["conforme"] is True)
+check("poteau bois : N nul → ValueError",
+      raises_value_error(run, {"b_mm": 150, "h_mm": 150, "N_Ed_kN": 0, "fc_0_d_mpa": 21}))
+
+# --- btp_calc_poussee_terres_rankine ---
+run = run_of("btp_calc_poussee_terres_rankine")
+# H=3 γ=18 φ=30° → Ka = tan²(30°) = 0.3333, P = 0.5×0.3333×18×9 = 27.0 kN/ml
+r = run({"hauteur_ecran_m": 3, "poids_volumique_kn_m3": 18, "angle_frottement_deg": 30})
+check("poussée Rankine : Ka ≈ 0.333, P = 27.0 kN/ml (calcul main)",
+      abs(r["coefficient_ka"] - 0.3333) < 0.001
+      and abs(r["poussee_resultante_kn_ml"] - 27.0) < 0.05)
+check("poussée Rankine : point d'application à H/3 = 1.0 m",
+      abs(r["point_application_m"] - 1.0) < 0.001)
+check("poussée Rankine : angle de frottement invalide → ValueError",
+      raises_value_error(run, {"hauteur_ecran_m": 3, "poids_volumique_kn_m3": 18,
+                               "angle_frottement_deg": 100}))
+
+# --- btp_verif_angle_talus ---
+run = run_of("btp_verif_angle_talus")
+# talus 20°, φ=33° → FS = tan(33°)/tan(20°) ≈ 1.784 ≥ 1.5 → stable
+r = run({"angle_talus_deg": 20, "angle_frottement_deg": 33})
+check("talus : FS ≈ 1.784, conforme (>= 1.5)",
+      abs(r["facteur_securite_calcule"] - 1.784) < 0.01 and r["conforme"] is True)
+check("talus : 40° avec φ=30° → instable",
+      run({"angle_talus_deg": 40, "angle_frottement_deg": 30})["conforme"] is False)
+check("talus : angle > 90 → ValueError",
+      raises_value_error(run, {"angle_talus_deg": 95, "angle_frottement_deg": 30}))
+
+# ===========================================================================
+# BLOC ELECTRICITE / PLOMBERIE — 5 skills
+# ===========================================================================
+print("\n[Bloc Électricité / Plomberie]")
+
+# --- btp_calc_chute_tension ---
+run = run_of("btp_calc_chute_tension")
+# monophasé, L=20 S=2.5 I=16 U=230 ρ=0.023 → ΔU = 2×0.023×8×16 = 5.888 V → 2.56 %
+r = run({"type_circuit": "monophase", "longueur_m": 20, "section_mm2": 2.5,
+         "courant_a": 16, "tension_v": 230})
+check("chute_tension : ΔU = 5.888 V, 2.56 % (calcul main)",
+      abs(r["chute_tension_v"] - 5.888) < 0.01 and abs(r["chute_tension_pct"] - 2.56) < 0.01)
+check("chute_tension : conforme (2.56 % <= 5 %)", r["conforme"] is True)
+check("chute_tension : section nulle → ValueError",
+      raises_value_error(run, {"type_circuit": "monophase", "longueur_m": 20,
+                               "section_mm2": 0, "courant_a": 16, "tension_v": 230}))
+
+# --- btp_calc_section_min_chute_tension ---
+run = run_of("btp_calc_section_min_chute_tension")
+# monophasé, L=20 I=16 U=230 limite 5 % → S_min ≈ 1.28 mm² → normalisée 1.5
+r = run({"type_circuit": "monophase", "longueur_m": 20, "courant_a": 16, "tension_v": 230})
+check("section_min : S_min ≈ 1.28 mm², normalisée 1.5 mm²",
+      abs(r["section_min_mm2"] - 1.28) < 0.01
+      and r["section_normalisee_recommandee_mm2"] == 1.5)
+check("section_min : courant nul → ValueError",
+      raises_value_error(run, {"type_circuit": "monophase", "longueur_m": 20,
+                               "courant_a": 0, "tension_v": 230}))
+
+# --- btp_calc_disjoncteur_calibre ---
+run = run_of("btp_calc_disjoncteur_calibre")
+# I_B=16, I_z=21 → calibres valides {16, 20} → recommandé 16
+r = run({"courant_emploi_a": 16, "courant_admissible_a": 21})
+check("disjoncteur : calibre recommandé 16 A (I_B=16 <= I_n <= I_z=21)",
+      r["calibre_recommande_a"] == 16 and r["conforme"] is True)
+check("disjoncteur : I_z trop faible (I_B=25 > I_z=20) → non conforme",
+      run({"courant_emploi_a": 25, "courant_admissible_a": 20})["conforme"] is False)
+check("disjoncteur : courant d'emploi nul → ValueError",
+      raises_value_error(run, {"courant_emploi_a": 0, "courant_admissible_a": 20}))
+
+# --- btp_calc_pression_disponible ---
+run = run_of("btp_calc_pression_disponible")
+# P=3 bar, L=15 ΔP=0.02 hauteur=6 → 3 − 0.3 − 0.6 = 2.1 bar
+r = run({"pression_reseau_bar": 3, "longueur_m": 15,
+         "perte_charge_bar_par_m": 0.02, "hauteur_m": 6})
+check("pression : P_dispo = 2.1 bar (calcul main), conforme",
+      abs(r["pression_disponible_bar"] - 2.1) < 0.001 and r["conforme"] is True)
+check("pression : réseau faible + étage haut → non conforme",
+      run({"pression_reseau_bar": 1.5, "longueur_m": 15,
+           "perte_charge_bar_par_m": 0.05, "hauteur_m": 8})["conforme"] is False)
+check("pression : pression réseau nulle → ValueError",
+      raises_value_error(run, {"pression_reseau_bar": 0, "longueur_m": 15,
+                               "perte_charge_bar_par_m": 0.02, "hauteur_m": 6}))
+
+# --- btp_calc_debit_eau_froide ---
+run = run_of("btp_calc_debit_eau_froide")
+# débit brut 2.0 l/s, 10 appareils → coef = 0.8/√9 = 0.2667 → Q = 0.5333 l/s
+r = run({"debit_brut_total_l_s": 2.0, "nombre_appareils": 10})
+check("débit EF : coef = 0.2667, Q = 0.5333 l/s (calcul main)",
+      abs(r["coefficient_simultaneite"] - 0.2667) < 0.001
+      and abs(r["debit_probable_l_s"] - 0.5333) < 0.001)
+check("débit EF : 1 appareil → coefficient 1.0",
+      run({"debit_brut_total_l_s": 0.5, "nombre_appareils": 1})["coefficient_simultaneite"]
+      == 1.0)
+check("débit EF : 0 appareil → ValueError",
+      raises_value_error(run, {"debit_brut_total_l_s": 2.0, "nombre_appareils": 0}))
+
+# ===========================================================================
+# BLOC CONFORT THERMIQUE / REGLEMENTATION — 5 skills
+# ===========================================================================
+print("\n[Bloc Confort thermique / Réglementation]")
+
+# --- btp_calc_besoin_chauffage_estimatif ---
+run = run_of("btp_calc_besoin_chauffage_estimatif")
+# 200 W/K × 2500 DJU × 24 / 1000 = 12000 kWh/an
+r = run({"deperditions_totales_w_k": 200, "dju": 2500})
+check("besoin chauffage : 12 000 kWh/an (calcul main)",
+      abs(r["besoin_chauffage_kwh_an"] - 12000.0) < 0.1)
+check("besoin chauffage : déperditions nulles → ValueError",
+      raises_value_error(run, {"deperditions_totales_w_k": 0, "dju": 2500}))
+
+# --- btp_calc_surface_taxable ---
+run = run_of("btp_calc_surface_taxable")
+# 150 − 10 − 5 = 135 m²
+r = run({"surface_close_couverte_m2": 150, "surface_sous_1m80_m2": 10,
+         "surface_vides_tremies_m2": 5})
+check("surface taxable : 135 m² (calcul main)", abs(r["surface_taxable_m2"] - 135.0) < 0.01)
+check("surface taxable : déductions > surface → ValueError",
+      raises_value_error(run, {"surface_close_couverte_m2": 100,
+                               "surface_sous_1m80_m2": 80, "surface_vides_tremies_m2": 30}))
+
+# --- btp_verif_emprise_sol_plu ---
+run = run_of("btp_verif_emprise_sol_plu")
+# emprise 120 / terrain 500 = 0.24 ≤ CES 0.30 → conforme, emprise max 150 m²
+r = run({"emprise_au_sol_m2": 120, "surface_terrain_m2": 500, "ces_max": 0.30})
+check("emprise PLU : ratio 0.24 conforme, emprise max 150 m²",
+      r["conforme"] is True and abs(r["emprise_max_autorisee_m2"] - 150.0) < 0.01)
+check("emprise PLU : emprise 200 m² → non conforme",
+      run({"emprise_au_sol_m2": 200, "surface_terrain_m2": 500,
+           "ces_max": 0.30})["conforme"] is False)
+check("emprise PLU : CES hors ]0,1] → ValueError",
+      raises_value_error(run, {"emprise_au_sol_m2": 120, "surface_terrain_m2": 500,
+                               "ces_max": 1.5}))
+
+# --- btp_calc_facteur_solaire_apport ---
+run = run_of("btp_calc_facteur_solaire_apport")
+# 2 m² × g 0.5 × 400 W/m² = 400 W
+r = run({"surface_vitrage_m2": 2, "facteur_solaire_g": 0.5, "irradiation_w_m2": 400})
+check("apport solaire : 400 W (calcul main)", abs(r["apport_solaire_w"] - 400.0) < 0.01)
+check("apport solaire : facteur g hors ]0,1] → ValueError",
+      raises_value_error(run, {"surface_vitrage_m2": 2, "facteur_solaire_g": 1.5,
+                               "irradiation_w_m2": 400}))
+
+# --- btp_verif_resistance_feu_element ---
+run = run_of("btp_verif_resistance_feu_element")
+# REI 90 couvre EI 60 (critères + durée)
+r = run({"classement_element": "REI 90", "exigence": "EI 60"})
+check("résistance feu : REI 90 conforme à EI 60 (marge +30 min)",
+      r["conforme"] is True and r["marge_min"] == 30)
+check("résistance feu : EI 30 ne couvre pas REI 60 (critère R manquant)",
+      run({"classement_element": "EI 30", "exigence": "REI 60"})["conforme"] is False)
+check("résistance feu : REI 30 < REI 60 (durée insuffisante) → non conforme",
+      run({"classement_element": "REI 30", "exigence": "REI 60"})["conforme"] is False)
+check("résistance feu : classement vide → ValueError",
+      raises_value_error(run, {"classement_element": "", "exigence": "EI 60"}))
+
+# ===========================================================================
 print()
 print("=" * 60)
 print(f"=== RESULTAT : {PASS} PASS / {FAIL} FAIL ===")

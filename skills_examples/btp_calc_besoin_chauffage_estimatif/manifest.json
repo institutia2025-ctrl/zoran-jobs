@@ -1,0 +1,47 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_besoin_chauffage_estimatif",
+    "name": "Besoin de chauffage annuel estimatif",
+    "version": "1.0.0",
+    "hash": "sha256:747271cf2b41834c5b48b76af0c255abcd717a98776d85f61b2410b4d6526812",
+    "signature": "phase-b-cc-btp_calc_besoin_chauffage_estimatif",
+    "author": "Claude Code (Phase B — bloc Confort thermique)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "deperditions_totales_w_k": {"type": "number"}, "dju": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "besoin_chauffage_kwh_an": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "thermique",
+    "triggers": ["besoin de chauffage", "degres-jours", "dju", "consommation chauffage", "estimation thermique"],
+    "description": "Estime le besoin de chauffage annuel par la méthode des degrés-jours unifiés."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0,  "expected_sigma_added": 0.0,  "weight": 0.5},
+    "cout":         {"expected_delta_phi": 0.6, "expected_T_added": 0.05, "expected_sigma_added": 0.0,  "weight": 0.3},
+    "carbone":      {"expected_delta_phi": 0.5, "expected_T_added": 0.0,  "expected_sigma_added": 0.05, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 20, "evenement": "Besoin sous-estimé : équipement de chauffage sous-dimensionné et inconfort thermique", "probabilite": 0.4, "gravite": "moyenne", "reference": "Méthode des degrés-jours unifiés (DJU)"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Estimation par degrés-jours : besoin BRUT, sans apports gratuits (solaire, internes) ni rendement d'installation — ce n'est pas une consommation.",
+    "Loi 1 : déperditions et DJU sont fournis (le DJU dépend de la zone climatique)."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

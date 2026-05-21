@@ -1,0 +1,53 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "zoran_gate_progression_coherente",
+    "name": "Barrière de progression cohérente",
+    "version": "1.0.0",
+    "hash": "sha256:9020c780f5e7fd29fdfae0dec3ddb81fbfb02b5539d764005238fe9f01035ae1",
+    "signature": "zoran-meta-gate_progression_coherente",
+    "author": "Claude Code (skill méta — gouvernance)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "ticket": {"type": "string"}, "checklist": {"type": "array"},
+      "validations_obligatoires": {"type": "array"}, "journal": {"type": "array"}}},
+    "outputs": {"type": "object", "properties": {
+      "peut_avancer": {"type": "boolean"}, "items_bloquants": {"type": "array"},
+      "journal": {"type": "array"}, "prochaine_action": {"type": "string"},
+      "verdict": {"type": "string"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "gouvernance",
+    "triggers": ["progression", "ticket", "checklist", "validation", "discipline", "gate"],
+    "description": "Barrière déterministe : refuse de passer au ticket suivant tant que la checklist (back, front, tests massifs) n'est pas entièrement validée. Journalise chaque évaluation."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global":       {"expected_delta_phi": 0.85, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.5},
+    "exploitation": {"expected_delta_phi": 0.7,  "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.3},
+    "securite":     {"expected_delta_phi": 0.8,  "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Avancer un ticket non validé : régression non détectée et accumulation de dette technique", "probabilite": 0.6, "gravite": "moyenne", "reference": "Pratique d'intégration continue (CI/CD) — toute avancée non testée est une régression probable"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Le skill DÉCIDE et JOURNALISE : il n'exécute pas les tests. Un skill du runtime est une fonction pure (ni réseau, ni process) — l'exécution des tests massifs et la surveillance multi-agents relèvent du harnais agentique.",
+    "Le journal retourné est cumulatif : l'appelant doit le repasser en entrée pour conserver la continuité.",
+    "La pertinence du verdict dépend de l'exactitude des statuts fournis (Loi 1 : aucun statut n'est supposé)."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

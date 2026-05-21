@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_revision_prix",
+    "name": "Révision de prix d'un marché de travaux",
+    "version": "1.0.0",
+    "hash": "sha256:4d90710372b530ac1542efa136b3a84032e4596538591349f27c49ad11c798c4",
+    "signature": "phase-b-cc-btp_calc_revision_prix",
+    "author": "Claude Code (Phase B — bloc Économie)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "prix_initial_eur": {"type": "number"}, "terme_fixe": {"type": "number"},
+      "index_initial": {"type": "number"}, "index_courant": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "prix_revise_eur": {"type": "number"}, "coefficient_revision": {"type": "number"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "economie_construction",
+    "triggers": ["revision de prix", "index bt", "formule parametrique", "actualisation", "marche travaux"],
+    "description": "Applique la formule paramétrique de révision de prix d'un marché de travaux."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "cout":         {"expected_delta_phi": 0.7, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.65},
+    "exploitation": {"expected_delta_phi": 0.5, "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.35}
+  },
+  "futur_probable": [
+    {"horizon_an": 2, "evenement": "Absence de clause de révision : perte financière ou litige face à l'évolution des index BT", "probabilite": 0.5, "gravite": "moyenne", "reference": "Pratique des marchés de travaux — clause de révision de prix"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Formule à un seul index. Ne traite pas les formules multi-index pondérées.",
+    "Loi 1 : terme fixe et valeurs d'index sont fournis (clause du marché + index BT publiés)."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

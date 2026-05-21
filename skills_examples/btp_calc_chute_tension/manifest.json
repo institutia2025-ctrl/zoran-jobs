@@ -1,0 +1,50 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_chute_tension",
+    "name": "Calcul de chute de tension",
+    "version": "1.0.0",
+    "hash": "sha256:fda4efa1978dad3b761cec081c0495ec64bef266c21bd0e8e5ddc2181a6afe1a",
+    "signature": "phase-b-cc-btp_calc_chute_tension",
+    "author": "Claude Code (Phase B — bloc Électricité)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "type_circuit": {"type": "string"}, "longueur_m": {"type": "number"},
+      "section_mm2": {"type": "number"}, "courant_a": {"type": "number"},
+      "tension_v": {"type": "number"}, "cosphi": {"type": "number"},
+      "resistivite": {"type": "number"}, "limite_pct": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "chute_tension_v": {"type": "number"}, "chute_tension_pct": {"type": "number"},
+      "conforme": {"type": "boolean"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "electricite",
+    "triggers": ["chute de tension", "circuit electrique", "nf c 15-100", "section cable", "delta u"],
+    "description": "Calcule la chute de tension d'un circuit électrique (NF C 15-100)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.6},
+    "cout":         {"expected_delta_phi": 0.5, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 5, "evenement": "Chute de tension excessive : dysfonctionnement d'appareils et échauffement des conducteurs", "probabilite": 0.4, "gravite": "moyenne", "reference": "NF C 15-100"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Approximation résistive (terme inductif négligé) — valable pour les sections courantes du logement.",
+    "Loi 1 : résistivité par défaut 0,023 Ω·mm²/m (cuivre, NF C 15-100), surchargeable."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

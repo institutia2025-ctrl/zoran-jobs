@@ -1,0 +1,52 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_poussee_terres_rankine",
+    "name": "Poussée active des terres (Rankine)",
+    "version": "1.0.0",
+    "hash": "sha256:42eb1804f3586885978c4bd5c846b652bb1281ff0a08c38d4a98401c170760a1",
+    "signature": "phase-b-cc-btp_calc_poussee_terres_rankine",
+    "author": "Claude Code (Phase B — bloc Géotechnique)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "hauteur_ecran_m": {"type": "number"},
+      "poids_volumique_kn_m3": {"type": "number"},
+      "angle_frottement_deg": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "coefficient_ka": {"type": "number"},
+      "poussee_resultante_kn_ml": {"type": "number"},
+      "point_application_m": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "geotechnique",
+    "triggers": ["poussee des terres", "rankine", "mur de soutenement", "ka", "geotechnique"],
+    "description": "Calcule la poussée active des terres sur un écran vertical (théorie de Rankine)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "structure": {"expected_delta_phi": 0.8,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.55},
+    "securite":  {"expected_delta_phi": 0.8,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.45}
+  },
+  "futur_probable": [
+    {"horizon_an": 30, "evenement": "Poussée sous-estimée : renversement ou glissement du mur de soutènement", "probabilite": 0.3, "gravite": "elevee", "reference": "NF EN 1997-1 (Eurocode 7) — ouvrages de soutènement"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Sol pulvérulent (cohésion nulle), écran vertical, terre-plein horizontal, hors nappe. Ne traite ni la butée, ni la poussée au repos, ni les surcharges, ni les sols cohérents, ni le sismique.",
+    "Loi 1 : γ et φ proviennent de l'étude géotechnique — ils sont fournis."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

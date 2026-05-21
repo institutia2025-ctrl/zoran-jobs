@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_angle_talus",
+    "name": "Vérification de stabilité de talus",
+    "version": "1.0.0",
+    "hash": "sha256:620144403ca6dc9487ff475ab5b26abc9f94c890270f568663a3c38ae12a67c3",
+    "signature": "phase-b-cc-btp_verif_angle_talus",
+    "author": "Claude Code (Phase B — bloc Géotechnique)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "angle_talus_deg": {"type": "number"}, "angle_frottement_deg": {"type": "number"},
+      "facteur_securite_requis": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "facteur_securite_calcule": {"type": "number"},
+      "facteur_securite_requis": {"type": "number"}, "conforme": {"type": "boolean"},
+      "verdict": {"type": "string"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "geotechnique",
+    "triggers": ["talus", "stabilite de pente", "glissement de terrain", "angle de frottement", "geotechnique"],
+    "description": "Vérifie la stabilité d'un talus pulvérulent sec (modèle de pente infinie)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8,
+    "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite":  {"expected_delta_phi": 0.9,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.55},
+    "structure": {"expected_delta_phi": 0.75, "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.45}
+  },
+  "futur_probable": [
+    {"horizon_an": 20, "evenement": "Talus surévalué : glissement de terrain, mise en danger des ouvrages et des personnes en aval", "probabilite": 0.25, "gravite": "critique", "reference": "NF EN 1997-1 — stabilité générale + retour de sinistralité talus"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Sol pulvérulent (cohésion nulle), sec, modèle de pente infinie. Ne traite ni les sols cohérents, ni les nappes, ni les ruptures circulaires, ni les surcharges en crête.",
+    "Loi 1 : φ provient de l'étude géotechnique. Un talus réel relève d'une étude G2 — ce skill est une orientation, pas un verdict d'expert."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

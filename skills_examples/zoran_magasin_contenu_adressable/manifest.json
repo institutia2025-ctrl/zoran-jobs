@@ -1,0 +1,54 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "zoran_magasin_contenu_adressable",
+    "name": "Magasin de contenus adressable",
+    "version": "1.0.0",
+    "hash": "sha256:09100876069dccefca76fe9111090ab403dd5ced2533abc06bad8cc905ff3f59",
+    "signature": "zoran-meta-magasin_contenu_adressable",
+    "author": "Claude Code (skill méta — sauvegarde)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "mode": {"type": "string"}, "fichiers": {"type": "array"},
+      "a_restaurer": {"type": "array"}, "store": {"type": "object"}}},
+    "outputs": {"type": "object", "properties": {
+      "store": {"type": "object"}, "photo": {"type": "object"},
+      "ratio_deduplication": {"type": "number"}, "restaures": {"type": "object"},
+      "manquants": {"type": "array"}, "corrompus": {"type": "array"},
+      "integrite_ok": {"type": "boolean"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "sauvegarde",
+    "triggers": ["magasin contenu", "content store", "deduplication", "restaurer fichiers", "adressage hash"],
+    "description": "Magasin adressé par empreinte : indexe et déduplique des contenus, restaure en vérifiant l'empreinte. Le coffre du photo-clone."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global":      {"expected_delta_phi": 0.8,  "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.5},
+    "maintenance": {"expected_delta_phi": 0.75, "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.3},
+    "cout":        {"expected_delta_phi": 0.7,  "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Restauration d'un contenu sans vérification d'empreinte : réintroduction silencieuse d'une version corrompue", "probabilite": 0.4, "gravite": "moyenne", "reference": "Adressage par contenu — l'empreinte est la garantie d'intégrité (principe content-addressed storage)"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Indexe, déduplique et résout EN MÉMOIRE. La persistance du magasin sur disque et l'écriture finale des fichiers relèvent du harnais.",
+    "Contenus traités comme du texte UTF-8 — ne traite pas les fichiers binaires.",
+    "Loi 1 : l'empreinte est recalculée à partir du contenu réel ; toute restauration la vérifie (intégrité falsifiable)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

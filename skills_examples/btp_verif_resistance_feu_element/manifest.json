@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_verif_resistance_feu_element",
+    "name": "Vérification de résistance au feu",
+    "version": "1.0.0",
+    "hash": "sha256:9c15a23c67bbaea63a55f89dbc1dc324b6ea2028c29f7e7b3c3c7c863166f427",
+    "signature": "phase-b-cc-btp_verif_resistance_feu_element",
+    "author": "Claude Code (Phase B — bloc Sécurité incendie)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "classement_element": {"type": "string"}, "exigence": {"type": "string"}}},
+    "outputs": {"type": "object", "properties": {
+      "conforme": {"type": "boolean"}, "criteres_manquants": {"type": "array"},
+      "marge_min": {"type": "number"}, "verdict": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "securite",
+    "triggers": ["resistance au feu", "coupe-feu", "rei", "classement feu", "securite incendie"],
+    "description": "Vérifie le classement de résistance au feu d'un élément vs l'exigence (NF EN 13501-2)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8, "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.9,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.6},
+    "structure":    {"expected_delta_phi": 0.7,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.25},
+    "exploitation": {"expected_delta_phi": 0.5,  "expected_T_added": 0.0,  "expected_sigma_added": 0.0,  "weight": 0.15}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Résistance au feu insuffisante : propagation rapide d'un incendie, mise en danger des occupants", "probabilite": 0.2, "gravite": "critique", "reference": "Règlement de sécurité contre l'incendie + NF EN 13501-2"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Comparaison de classement. Ne réalise ni l'essai de résistance au feu ni le calcul thermomécanique.",
+    "Loi 1 : le classement de l'élément provient d'un PV d'essai ou d'une appréciation de laboratoire agréé ; l'exigence provient du règlement."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

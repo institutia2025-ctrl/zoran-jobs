@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_debit_ventilation_vmc",
+    "name": "Débit de ventilation VMC réglementaire",
+    "version": "1.0.0",
+    "hash": "sha256:bff939ab682dbc0fb3d410c8c281b0ee01f9368ef99d8f11408dfc7c737f8ce3",
+    "signature": "phase-b-cc-btp_calc_debit_ventilation_vmc",
+    "author": "Claude Code (Phase B — bloc CVC)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "nb_pieces_principales": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "debit_global_minimal_m3h": {"type": "number"},
+      "nb_pieces_principales": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "cvc",
+    "triggers": ["vmc", "ventilation", "debit air", "aeration logement", "arrete 1982"],
+    "description": "Donne le débit global minimal extrait d'un logement selon le nombre de pièces (arrêté du 24/03/1982)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.6,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.5},
+    "maintenance":  {"expected_delta_phi": 0.6, "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.3},
+    "carbone":      {"expected_delta_phi": 0.4, "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 5, "evenement": "Débit de ventilation insuffisant : humidité, dégradation de la qualité de l'air et pathologies (moisissures)", "probabilite": 0.5, "gravite": "moyenne", "reference": "Arrêté du 24 mars 1982 + retour d'expérience qualité d'air intérieur"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Donne le débit GLOBAL minimal extrait. Ne donne pas la répartition par pièce de service ni les débits de pointe (cuisine).",
+    "Ne dimensionne pas les bouches ni le réseau aéraulique.",
+    "Loi 1 : barème repris de l'arrêté du 24 mars 1982."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
