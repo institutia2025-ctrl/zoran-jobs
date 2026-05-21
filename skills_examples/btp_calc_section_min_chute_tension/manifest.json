@@ -1,0 +1,51 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_section_min_chute_tension",
+    "name": "Section minimale de câble (chute de tension)",
+    "version": "1.0.0",
+    "hash": "sha256:4621f17c5fe22a977face9b61b9050fdda5b9c49996e9ba1c908765dfd46e72a",
+    "signature": "phase-b-cc-btp_calc_section_min_chute_tension",
+    "author": "Claude Code (Phase B — bloc Électricité)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "type_circuit": {"type": "string"}, "longueur_m": {"type": "number"},
+      "courant_a": {"type": "number"}, "tension_v": {"type": "number"},
+      "cosphi": {"type": "number"}, "resistivite": {"type": "number"},
+      "limite_pct": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "section_min_mm2": {"type": "number"},
+      "section_normalisee_recommandee_mm2": {"type": "number"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "electricite",
+    "triggers": ["section minimale", "section cable", "chute de tension", "nf c 15-100", "dimensionner conducteur"],
+    "description": "Calcule la section minimale d'un câble pour respecter une chute de tension (NF C 15-100)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "cout":         {"expected_delta_phi": 0.65, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.55},
+    "exploitation": {"expected_delta_phi": 0.65, "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.45}
+  },
+  "futur_probable": [
+    {"horizon_an": 5, "evenement": "Section sous-dimensionnée : chute de tension et échauffement, reprise de l'installation", "probabilite": 0.4, "gravite": "moyenne", "reference": "NF C 15-100"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Critère « chute de tension » seul. La section finale doit AUSSI satisfaire le critère d'échauffement (I_z, tableaux NF C 15-100) — retenir la plus grande des deux.",
+    "Loi 1 : résistivité du cuivre par défaut 0,023 Ω·mm²/m (NF C 15-100)."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

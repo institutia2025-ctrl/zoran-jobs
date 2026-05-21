@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_disjoncteur_calibre",
+    "name": "Calibre de protection d'un circuit",
+    "version": "1.0.0",
+    "hash": "sha256:1dda4111f5afa1931316269d3b84fe4dad3284c36895fad52ea130caf1e4a0e4",
+    "signature": "phase-b-cc-btp_calc_disjoncteur_calibre",
+    "author": "Claude Code (Phase B — bloc Électricité)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "courant_emploi_a": {"type": "number"}, "courant_admissible_a": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "calibre_recommande_a": {"type": "number"}, "calibres_valides_a": {"type": "array"},
+      "conforme": {"type": "boolean"}, "verdict": {"type": "string"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "electricite",
+    "triggers": ["disjoncteur", "calibre protection", "nf c 15-100", "coordination", "ampere"],
+    "description": "Détermine le calibre de protection d'un circuit (règle I_B ≤ I_n ≤ I_z, NF C 15-100)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8, "expected_T_added": 0.05,
+    "expected_sigma_added": 0.05, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "securite":     {"expected_delta_phi": 0.9,  "expected_T_added": 0.05, "expected_sigma_added": 0.05, "weight": 0.55},
+    "exploitation": {"expected_delta_phi": 0.6,  "expected_T_added": 0.0,  "expected_sigma_added": 0.0,  "weight": 0.3},
+    "cout":         {"expected_delta_phi": 0.4,  "expected_T_added": 0.05, "expected_sigma_added": 0.0,  "weight": 0.15}
+  },
+  "futur_probable": [
+    {"horizon_an": 10, "evenement": "Protection mal calibrée : surchauffe de la canalisation non coupée, risque d'incendie d'origine électrique", "probabilite": 0.25, "gravite": "critique", "reference": "NF C 15-100 — coordination protection / canalisation"}
+  ],
+  "veto_capable": true,
+  "limites_explicites": [
+    "Règle de coordination de base (I_B ≤ I_n ≤ I_z). Ne traite pas le pouvoir de coupure ni la sélectivité.",
+    "Loi 1 : I_B et I_z sont fournis ; I_z se lit dans les tableaux NF C 15-100."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "isolated",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

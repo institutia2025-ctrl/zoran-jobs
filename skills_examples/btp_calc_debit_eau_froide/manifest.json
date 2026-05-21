@@ -1,0 +1,47 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_debit_eau_froide",
+    "name": "Débit probable d'eau froide",
+    "version": "1.0.0",
+    "hash": "sha256:0e79b8feef0aff88ba5a3c440074894df37624df6acc26f3ef23cbd1b537e154",
+    "signature": "phase-b-cc-btp_calc_debit_eau_froide",
+    "author": "Claude Code (Phase B — bloc Plomberie)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "debit_brut_total_l_s": {"type": "number"}, "nombre_appareils": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "coefficient_simultaneite": {"type": "number"},
+      "debit_probable_l_s": {"type": "number"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "plomberie",
+    "triggers": ["debit eau froide", "coefficient de simultaneite", "alimentation eau", "dtu 60.11", "debit probable"],
+    "description": "Calcule le débit probable d'eau froide par coefficient de simultanéité (NF DTU 60.11)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.6},
+    "cout":         {"expected_delta_phi": 0.5, "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 5, "evenement": "Réseau sous-dimensionné : débit insuffisant aux heures de pointe", "probabilite": 0.4, "gravite": "moyenne", "reference": "NF DTU 60.11 — débits probables"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Coefficient de simultanéité général (logement courant). Ne traite pas les collectivités, usages industriels ni robinets à débit permanent.",
+    "Loi 1 : les débits bruts des appareils sont des données normatives fournies."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

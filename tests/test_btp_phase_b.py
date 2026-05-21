@@ -387,6 +387,72 @@ check("talus : angle > 90 → ValueError",
       raises_value_error(run, {"angle_talus_deg": 95, "angle_frottement_deg": 30}))
 
 # ===========================================================================
+# BLOC ELECTRICITE / PLOMBERIE — 5 skills
+# ===========================================================================
+print("\n[Bloc Électricité / Plomberie]")
+
+# --- btp_calc_chute_tension ---
+run = run_of("btp_calc_chute_tension")
+# monophasé, L=20 S=2.5 I=16 U=230 ρ=0.023 → ΔU = 2×0.023×8×16 = 5.888 V → 2.56 %
+r = run({"type_circuit": "monophase", "longueur_m": 20, "section_mm2": 2.5,
+         "courant_a": 16, "tension_v": 230})
+check("chute_tension : ΔU = 5.888 V, 2.56 % (calcul main)",
+      abs(r["chute_tension_v"] - 5.888) < 0.01 and abs(r["chute_tension_pct"] - 2.56) < 0.01)
+check("chute_tension : conforme (2.56 % <= 5 %)", r["conforme"] is True)
+check("chute_tension : section nulle → ValueError",
+      raises_value_error(run, {"type_circuit": "monophase", "longueur_m": 20,
+                               "section_mm2": 0, "courant_a": 16, "tension_v": 230}))
+
+# --- btp_calc_section_min_chute_tension ---
+run = run_of("btp_calc_section_min_chute_tension")
+# monophasé, L=20 I=16 U=230 limite 5 % → S_min ≈ 1.28 mm² → normalisée 1.5
+r = run({"type_circuit": "monophase", "longueur_m": 20, "courant_a": 16, "tension_v": 230})
+check("section_min : S_min ≈ 1.28 mm², normalisée 1.5 mm²",
+      abs(r["section_min_mm2"] - 1.28) < 0.01
+      and r["section_normalisee_recommandee_mm2"] == 1.5)
+check("section_min : courant nul → ValueError",
+      raises_value_error(run, {"type_circuit": "monophase", "longueur_m": 20,
+                               "courant_a": 0, "tension_v": 230}))
+
+# --- btp_calc_disjoncteur_calibre ---
+run = run_of("btp_calc_disjoncteur_calibre")
+# I_B=16, I_z=21 → calibres valides {16, 20} → recommandé 16
+r = run({"courant_emploi_a": 16, "courant_admissible_a": 21})
+check("disjoncteur : calibre recommandé 16 A (I_B=16 <= I_n <= I_z=21)",
+      r["calibre_recommande_a"] == 16 and r["conforme"] is True)
+check("disjoncteur : I_z trop faible (I_B=25 > I_z=20) → non conforme",
+      run({"courant_emploi_a": 25, "courant_admissible_a": 20})["conforme"] is False)
+check("disjoncteur : courant d'emploi nul → ValueError",
+      raises_value_error(run, {"courant_emploi_a": 0, "courant_admissible_a": 20}))
+
+# --- btp_calc_pression_disponible ---
+run = run_of("btp_calc_pression_disponible")
+# P=3 bar, L=15 ΔP=0.02 hauteur=6 → 3 − 0.3 − 0.6 = 2.1 bar
+r = run({"pression_reseau_bar": 3, "longueur_m": 15,
+         "perte_charge_bar_par_m": 0.02, "hauteur_m": 6})
+check("pression : P_dispo = 2.1 bar (calcul main), conforme",
+      abs(r["pression_disponible_bar"] - 2.1) < 0.001 and r["conforme"] is True)
+check("pression : réseau faible + étage haut → non conforme",
+      run({"pression_reseau_bar": 1.5, "longueur_m": 15,
+           "perte_charge_bar_par_m": 0.05, "hauteur_m": 8})["conforme"] is False)
+check("pression : pression réseau nulle → ValueError",
+      raises_value_error(run, {"pression_reseau_bar": 0, "longueur_m": 15,
+                               "perte_charge_bar_par_m": 0.02, "hauteur_m": 6}))
+
+# --- btp_calc_debit_eau_froide ---
+run = run_of("btp_calc_debit_eau_froide")
+# débit brut 2.0 l/s, 10 appareils → coef = 0.8/√9 = 0.2667 → Q = 0.5333 l/s
+r = run({"debit_brut_total_l_s": 2.0, "nombre_appareils": 10})
+check("débit EF : coef = 0.2667, Q = 0.5333 l/s (calcul main)",
+      abs(r["coefficient_simultaneite"] - 0.2667) < 0.001
+      and abs(r["debit_probable_l_s"] - 0.5333) < 0.001)
+check("débit EF : 1 appareil → coefficient 1.0",
+      run({"debit_brut_total_l_s": 0.5, "nombre_appareils": 1})["coefficient_simultaneite"]
+      == 1.0)
+check("débit EF : 0 appareil → ValueError",
+      raises_value_error(run, {"debit_brut_total_l_s": 2.0, "nombre_appareils": 0}))
+
+# ===========================================================================
 print()
 print("=" * 60)
 print(f"=== RESULTAT : {PASS} PASS / {FAIL} FAIL ===")

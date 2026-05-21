@@ -1,0 +1,49 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "btp_calc_pression_disponible",
+    "name": "Pression d'eau disponible au point de puisage",
+    "version": "1.0.0",
+    "hash": "sha256:bf63a3014b37f0622b6e14092616f585b72d4b1407368e8425fdb8f53aa4465e",
+    "signature": "phase-b-cc-btp_calc_pression_disponible",
+    "author": "Claude Code (Phase B — bloc Plomberie)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "pression_reseau_bar": {"type": "number"}, "longueur_m": {"type": "number"},
+      "perte_charge_bar_par_m": {"type": "number"}, "hauteur_m": {"type": "number"},
+      "pression_min_requise_bar": {"type": "number"}}},
+    "outputs": {"type": "object", "properties": {
+      "pression_disponible_bar": {"type": "number"}, "conforme": {"type": "boolean"},
+      "verdict": {"type": "string"}, "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "plomberie",
+    "triggers": ["pression eau", "point de puisage", "perte de charge", "alimentation eau", "dtu 60.11"],
+    "description": "Calcule la pression d'eau disponible à un point de puisage (NF DTU 60.11)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.65, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "exploitation": {"expected_delta_phi": 0.7, "expected_T_added": 0.0, "expected_sigma_added": 0.0,  "weight": 0.6},
+    "maintenance":  {"expected_delta_phi": 0.5, "expected_T_added": 0.0, "expected_sigma_added": 0.05, "weight": 0.4}
+  },
+  "futur_probable": [
+    {"horizon_an": 3, "evenement": "Pression insuffisante : inconfort d'usage, appareils mal alimentés (chauffe-eau, mitigeurs thermostatiques)", "probabilite": 0.45, "gravite": "moyenne", "reference": "NF DTU 60.11 — pression de service"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "Pertes de charge linéiques fournies. Ne traite pas les pertes singulières (coudes, vannes, compteur) ni les coups de bélier.",
+    "Loi 1 : la perte de charge linéique provient d'un calcul hydraulique ou d'un abaque."
+  ],
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
