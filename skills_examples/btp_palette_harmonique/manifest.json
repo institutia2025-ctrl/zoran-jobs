@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "identity": {
     "skill_id": "palette_harmonique",
     "name": "Palette harmonique",
@@ -62,5 +62,18 @@
   "providers_compatible": [
     "local"
   ],
-  "lifecycle_state": "candidate"
+  "lifecycle_state": "candidate",
+  "coherence_multi_frame": {
+    "exploitation": {
+      "expected_delta_phi": 0.3,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.0,
+      "weight": 1.0
+    }
+  },
+  "veto_capable": false,
+  "limites_explicites": [
+    "Genere une palette triadique uniquement. Ne couvre pas complementaire, analogique, monochromatique.",
+    "Theorie HSL pure ; ne tient pas compte de la psychologie des couleurs ni des contextes culturels."
+  ]
 }

@@ -2,6 +2,47 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.4.0-contract-v2] — 2026-05-21
+
+### Ajouté — Contrat skill V2 (industrialisation)
+
+Évolution majeure du contrat de skill, **rétro-compatible 100%** (les 7 skills V1 + 5 BTP V1 continuent de marcher sans modification).
+
+#### Spec gelée
+- `specs/ZORAN_SKILL_CONTRACT_V2.md` — 237 lignes, 4 champs optionnels, 4 nouveaux invariants (INV-10 à INV-13).
+
+#### 4 champs V2 (tous optionnels)
+- **`coherence_multi_frame`** — cohérence par cadre métier (`structure`, `cout`, `carbone`, `maintenance`, `exploitation`, `securite`), chaque cadre suivant **INV-1 strict** (`(1 + T + σ)` par cadre).
+- **`futur_probable`** — projection à horizon temporel (Loi 2 Zoran : Futur Cohérent). Chaque entrée requiert `horizon_an`, `evenement`, `probabilite`, `gravite`, `reference` (Loi 1 anti-hallucination : pas de prediction sans source).
+- **`veto_capable`** — déclare que le skill peut être bloqué par veto sécurité du routeur (pré-filtre AVANT scoring).
+- **`limites_explicites`** — liste des choses que le skill ne sait PAS faire (Loi 10 : refus partiel explicite).
+
+#### Implémentation runtime
+- `registry/manifest.py` : validation V2 + 4 nouveaux champs sur Manifest dataclass.
+- `runtime/coherence/engine.py` : `compute_S_multi_frame()` + `s_global()`. INV-11 : chaque cadre = INV-1 indépendant.
+- `router/router.py` : `is_veto_securite()` + `VETO_SECURITE_SEUIL=0.15`. Pré-filtre AVANT scoring (INV-12 déterministe).
+
+#### Tests
+- `tests/test_contract_v2.py` : **20 assertions** (rétrocompat V1, validation V2, multi-frame INV-1, veto INV-12).
+- Tous tests existants intacts.
+- **Total : 139 PASS / 0 FAIL** sur la suite complète.
+- Ruff : All checks passed.
+
+#### Migration BTP Phase A
+Les 5 skills BTP Phase A migrés vers V2 avec multi-frame + limites + (pour structure/nucléaire) `veto_capable: true` + futur probable horizons 30/50 ans.
+
+### Invariants ajoutés
+- **INV-10** : Rétrocompatibilité V1 absolue.
+- **INV-11** : INV-1 préservé par cadre (aucun produit `T×σ` caché).
+- **INV-12** : Veto déterministe (même état → même verdict).
+- **INV-13** : `limites_explicites` traçables dans la trace runtime.
+
+### Conformité Zoran
+- INV-1 (additif) **réaffirmé** par cadre, jamais T×σ.
+- Loi 1 (jamais halluciner) appliquée aux `futur_probable.reference` (vide → erreur de validation).
+- Loi 2 (Futur Cohérent) incarnée par `futur_probable`.
+- Loi 10 (Anti-hallucination, refus partiel) incarnée par `limites_explicites`.
+
 ## [v0.3.0-phase-a-btp] — 2026-05-21
 
 ### Ajouté — 5 skills BTP (Phase A : preuve de méthode)

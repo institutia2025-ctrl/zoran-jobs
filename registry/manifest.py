@@ -23,6 +23,11 @@ LATENCY_CLASSES = {"fast", "medium", "slow"}
 LIFECYCLE_MVP = {"candidate", "active", "rejected"}
 ROLLBACK_STRATEGIES = {"undo_function", "snapshot", "none"}
 
+# --- V2 énumérations ---
+GRAVITE_V2 = {"faible", "moyenne", "elevee", "critique"}
+FRAMES_V2_RECOMMANDES = {"structure", "cout", "carbone", "maintenance",
+                          "exploitation", "securite", "global"}
+
 
 @dataclass
 class Manifest:
@@ -43,6 +48,12 @@ class Manifest:
     rollback: dict
     providers_compatible: list[str]
     lifecycle_state: str
+    # --- V2 champs optionnels (rétro-compatible) ---
+    coherence_multi_frame: dict = field(default_factory=dict)
+    futur_probable: list = field(default_factory=list)
+    veto_capable: bool = False
+    limites_explicites: list = field(default_factory=list)
+    # ----------------------------------------------
     raw: dict = field(default_factory=dict)
     source_dir: str = ""  # métadonnée runtime (rempli par le Registry, pas dans le json)
 
@@ -102,7 +113,71 @@ def validate_manifest(data: dict) -> list[str]:
     if data.get("lifecycle_state") not in LIFECYCLE_MVP:
         errors.append(f"lifecycle_state : attendu l'un de {sorted(LIFECYCLE_MVP)} (MVP)")
 
+    # --- Validation V2 (déclenchée si schema_version >= 2.0 OU champs V2 présents) ---
+    _validate_v2_extensions(data, errors)
+
     return errors
+
+
+def _validate_v2_extensions(data: dict, errors: list) -> None:
+    """Valide les champs V2 (optionnels, rétro-compat). Erreurs accumulees dans `errors`."""
+    mf = data.get("coherence_multi_frame")
+    if mf is not None:
+        if not isinstance(mf, dict) or not mf:
+            errors.append("coherence_multi_frame : doit etre un dict non vide si present")
+            return
+        total_weight = 0.0
+        for fname, cfg in mf.items():
+            if not isinstance(cfg, dict):
+                errors.append(f"coherence_multi_frame.{fname} : doit etre un objet")
+                continue
+            for k in ("expected_delta_phi", "expected_T_added", "expected_sigma_added"):
+                v = cfg.get(k)
+                if not isinstance(v, (int, float)) or isinstance(v, bool) or not (0.0 <= v <= 1.0):
+                    errors.append(f"coherence_multi_frame.{fname}.{k} : nombre dans [0..1] attendu")
+            w = cfg.get("weight")
+            if not isinstance(w, (int, float)) or isinstance(w, bool) or not (0.0 <= w <= 1.0):
+                errors.append(f"coherence_multi_frame.{fname}.weight : nombre dans [0..1] attendu")
+            else:
+                total_weight += w
+        if mf and abs(total_weight - 1.0) > 0.01:
+            errors.append(
+                f"coherence_multi_frame : somme des poids = {total_weight:.4f}, attendu 1.0 +/- 0.01"
+            )
+
+    fp = data.get("futur_probable")
+    if fp is not None:
+        if not isinstance(fp, list):
+            errors.append("futur_probable : doit etre une liste si present")
+        else:
+            for i, item in enumerate(fp):
+                if not isinstance(item, dict):
+                    errors.append(f"futur_probable[{i}] : doit etre un objet")
+                    continue
+                if not isinstance(item.get("horizon_an"), int) or item["horizon_an"] < 1:
+                    errors.append(f"futur_probable[{i}].horizon_an : entier >= 1 requis")
+                if not isinstance(item.get("evenement"), str) or not item["evenement"]:
+                    errors.append(f"futur_probable[{i}].evenement : str non vide requis")
+                pb = item.get("probabilite")
+                if not isinstance(pb, (int, float)) or isinstance(pb, bool) or not (0.0 <= pb <= 1.0):
+                    errors.append(f"futur_probable[{i}].probabilite : nombre dans [0..1] requis")
+                if item.get("gravite") not in GRAVITE_V2:
+                    errors.append(f"futur_probable[{i}].gravite : attendu {sorted(GRAVITE_V2)}")
+                if not isinstance(item.get("reference"), str) or not item["reference"]:
+                    errors.append(f"futur_probable[{i}].reference : source vérifiable requise (Loi 1)")
+
+    vc = data.get("veto_capable")
+    if vc is not None and not isinstance(vc, bool):
+        errors.append("veto_capable : booleen attendu")
+
+    le = data.get("limites_explicites")
+    if le is not None:
+        if not isinstance(le, list):
+            errors.append("limites_explicites : doit etre une liste de strings")
+        else:
+            for i, lim in enumerate(le):
+                if not isinstance(lim, str) or not lim.strip():
+                    errors.append(f"limites_explicites[{i}] : string non vide attendue")
 
 
 def parse_manifest(data: dict) -> Manifest:
@@ -126,6 +201,10 @@ def parse_manifest(data: dict) -> Manifest:
         rollback=dict(data.get("rollback") or {}),
         providers_compatible=list(data.get("providers_compatible") or []),
         lifecycle_state=data["lifecycle_state"],
+        coherence_multi_frame=dict(data.get("coherence_multi_frame") or {}),
+        futur_probable=list(data.get("futur_probable") or []),
+        veto_capable=bool(data.get("veto_capable", False)),
+        limites_explicites=list(data.get("limites_explicites") or []),
         raw=data,
     )
 

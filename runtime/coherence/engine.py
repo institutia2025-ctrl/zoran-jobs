@@ -81,4 +81,37 @@ def record_S(state: CoherenceState) -> float:
 __all__ = [
     "CoherenceState", "compute_S", "state_S",
     "candidate_S", "delta_S", "dS_dt", "record_S",
+    # V2 :
+    "compute_S_multi_frame", "s_global",
 ]
+
+
+# ============================================================================
+# V2 — Cohérence multi-cadres (rétro-compat, INV-1 préservé par cadre)
+# ============================================================================
+
+def compute_S_multi_frame(state: CoherenceState, multi_frame: dict) -> dict:
+    """Calcule S par cadre. Chaque cadre suit INV-1 strict (1 + T + sigma).
+
+    INV-11 : aucun produit T×σ caché. Chaque cadre est un compute_S indépendant.
+    """
+    out = {}
+    for frame, cfg in multi_frame.items():
+        if not isinstance(cfg, dict):
+            continue
+        out[frame] = compute_S(
+            state.beta,
+            state.delta_phi + float(cfg.get("expected_delta_phi", 0.0)),
+            state.T + float(cfg.get("expected_T_added", 0.0)),
+            state.sigma + float(cfg.get("expected_sigma_added", 0.0)),
+        )
+    return out
+
+
+def s_global(s_per_frame: dict, multi_frame: dict) -> float:
+    """S_global = somme(weight_i × S_i). Somme des poids déjà validée à 1.0 par le manifest."""
+    return sum(
+        float(multi_frame[f].get("weight", 0.0)) * s
+        for f, s in s_per_frame.items()
+        if f in multi_frame
+    )
