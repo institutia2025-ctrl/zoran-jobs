@@ -56,6 +56,8 @@ jobs:
         run: python tests/test_zoran_meta_skills.py
       - name: test_zoran_photo_clone (13)
         run: python tests/test_zoran_photo_clone.py
+      - name: test_zoran_magasin_contenu (13)
+        run: python tests/test_zoran_magasin_contenu.py
 
   lint:
     name: ruff lint
