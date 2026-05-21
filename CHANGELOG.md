@@ -2,6 +2,41 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.7.0-phase-a-sonnet-structure] — 2026-05-21
+
+### Ajouté — 5 skills Structure simple (AXE 3 du masterplan, 2ème moitié de ma Phase A)
+
+10/10 skills Sonnet livrés sur Phase A (5 pathologies + 5 structure). Catalogue complet en V2 :
+
+| skill_id | Élément | Référence métier |
+|---|---|---|
+| `btp_verif_poteau_beton` | Poteau BA compression centrée | NF EN 1992-1-1 §6.1 + §5.8.3.1 (ANF γc=1.5, γs=1.15) |
+| `btp_verif_poutre_flexion` | Poutre BA flexion simple | NF EN 1992-1-1 §6.1 + §3.1.7 (diagramme rectangle) |
+| `btp_verif_dalle_simple` | Dalle BA prédimensionnement | NF EN 1992-1-1 §7.4.2 (ratio L/d limitation flèche) |
+| `btp_fondation_semelle_isolee` | Semelle isolée carrée | NF EN 1997-1 §2.4.7.3 + NF DTU 13.1 + EC2 §9.8 |
+| `btp_ferraillage_min_eurocode` | As_min poteau/poutre/dalle | NF EN 1992-1-1 §9.2 / §9.3 / §9.5 + §3.1.6 (fctm) |
+
+### Tests
+- `tests/test_btp_structure.py` : **26 assertions** (5 calculs Eurocode vérifiés à la main + 5 négatifs + 6 routages E2E).
+- Suite complète : **190 PASS / 0 FAIL** (164 + 26).
+- Ruff : All checks passed.
+
+### Calculs Eurocode vérifiables
+Chaque skill produit un résultat **prédictible à la main** :
+- Poteau 300×300 C25/30 4HA20 N_Rd ≈ 2046 kN (testé).
+- Poutre 300×600 C25/30 5HA20 d=560 z=0.9d → M_Rd ≈ 344 kNm (testé).
+- Dalle L=5m h=250 → ratio 22.2 < 25 conforme prédim (testé).
+- Semelle 600 kN sur σ=200 kPa → B=1750 mm σ_appl=195.9 kPa (testé).
+- Ferraillage min poteau 300×300 N=600 → As_min = 180 mm² règle 0.002·Ac (testé).
+
+### Veto sécurité activé
+Tous les 5 skills structure ont `veto_capable: true` : un skill structure mal renseigné (S_securite < seuil) est **bloqué par le router avant scoring**. C'est la garantie INV-12 testée.
+
+### Loi 1 respectée
+- Tous les coefficients (γc, γs, αcc, formule fctm) viennent de l'Eurocode 2 (publique).
+- `btp_fondation_semelle_isolee` exige `source_etude_sol` non vide (G1/G2 BET géotechnique) — sinon refus.
+- Aucune valeur de σ_sol fabriquée.
+
 ## [v0.6.0-phase-a-sonnet-pathologies] — 2026-05-21
 
 ### Ajouté — 5 skills Pathologies (AXE 4 du masterplan, ma moitié des 20/80)
