@@ -3,7 +3,6 @@
 [![tests](https://github.com/institutia2025-ctrl/zoran-jobs/actions/workflows/tests.yml/badge.svg)](https://github.com/institutia2025-ctrl/zoran-jobs/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![assertions](https://img.shields.io/badge/assertions-231%20PASS%20%2F%200%20FAIL-brightgreen)](#7-lancer)
 [![phase](https://img.shields.io/badge/phase-1%20MVP%20frozen-blue)]()
 [![phase4](https://img.shields.io/badge/phase%204-NO--GO%20(1%2F13)-red)](audit/PHASE_4_GO_NOGO.md)
 
@@ -12,7 +11,7 @@
 > Mission : `ZORAN_JOBS_20260521` · Phase 1 MVP (consolidation)
 > Ce README est **auto-descriptif** : une IA externe doit pouvoir comprendre et faire revivre le système à partir de ce dépôt seul, sans contexte humain.
 >
-> **🤖 IA qui lis ce dépôt ?** Va directement à **`transmission/AI_BOOTSTRAP.md`** — point d'entrée IA-native : nature du système, invariants, frontières NO-GO, séquence d'onboarding pas à pas.
+> **🤖 IA qui lis ce dépôt ?** Lis **d'abord** `transmission/AI_READING_DISCIPLINE.md` — comment rendre compte de ce dépôt sans rien inventer ni gonfler (sépare fait et revendication, reste adversarial). Puis **`transmission/AI_BOOTSTRAP.md`** — point d'entrée IA-native : nature du système, invariants, frontières NO-GO, onboarding.
 >
 > **👤 Humain non technique ?** `transmission/HUMAN_HANDOFF.md` — 5 minutes, zéro jargon.
 
@@ -104,15 +103,15 @@ python tests/stress/massive_validation.py # stress / chaos / reproductib. → 15
 python tests/test_coherence_unit.py      # moteur de cohérence isolé      → 12 PASS
 ```
 
-**Total : 231 assertions, 0 échec.** (V1 + V2 + BTP Phase A) CI multi-OS multi-version vérifie à chaque commit.
+Le nombre exact d'assertions **évolue** à chaque skill ajouté — un total figé ici serait faux dès le commit suivant. La mesure qui fait foi : **relancer les suites soi-même**, et la CI, qui le fait à chaque commit sur 3 OS × 3 versions de Python. Compte ton résultat, ne cite pas un nombre gelé.
 
-> **Transmissibilité prouvée** (DÉMO 1, 2026-05-21) : une intelligence sans aucun contexte a reconstruit et fait revivre ce runtime depuis le dépôt seul. Voir `tests/reconstruction/`.
+> **DÉMO 1 de transmissibilité** (2026-05-21) : un agent *sans contexte* — proxy d'IA externe, **pas** un autre éditeur de modèle — a reconstruit et exécuté le runtime depuis le dépôt seul. Démo probante, pas preuve universelle : `tests/reconstruction/RECONSTRUCTION_RESULT.md` (limite assumée incluse).
 >
-> **Validation massive passée** : 1000 manifests, 120 skills × 400 prompts, 10 000 calculs S, 2000 évaluations immunitaires — 0 crash, routage 100 % déterministe, reproductible.
+> **Stress / chaos** : `tests/stress/massive_validation.py` exerce 1000 manifests, 120 skills × 400 routages, 10 000 calculs S, 2000 évaluations immunitaires. Ces chiffres ne sont pas un argument — ils sont **reproductibles** : relance le fichier et vérifie toi-même.
 >
-> **Audit indépendant** (2026-05-21) : note 17,9/20 brut → après consolidation (CI + tests unitaires + THEORY_BRIDGE + docs GitHub standard) : 20/20 ciblé.
+> Ce dépôt ne revendique **aucune note sur 20** : une note d'audit est une appréciation, pas une mesure. Ce qui fait foi : les tests qui passent (vérifiables) et les limites assumées — `audit/LIMITES_ET_DETTE.md`.
 
-**Version : `v0.2.0-alpha-validation`** — runtime transmissible, massivement validé, consolidé.
+**Version : `v0.2.0-alpha-validation`.** Runtime testé, déterministe, reproductible. Ses limites, ses coûts et sa dette sont documentés sans fard : `audit/LIMITES_ET_DETTE.md`.
 
 ## 8. État d'avancement
 

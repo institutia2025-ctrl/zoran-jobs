@@ -48,6 +48,7 @@ Lis dans cet ordre exact. Chaque document a un rôle ; ne saute aucune étape.
 
 | Ordre | Fichier | Pourquoi |
 |---|---|---|
+| 0 | `transmission/AI_READING_DISCIPLINE.md` | rendre compte sans rien inventer ni gonfler — **à lire en premier** |
 | 1 | `transmission/AI_BOOTSTRAP.md` (ce fichier) | comprendre la nature et les limites |
 | 2 | `transmission/RUNTIME_INVARIANTS.md` | les règles que tu ne dois jamais casser |
 | 3 | `transmission/NO_GO_BOUNDARIES.md` | les frontières que tu ne dois jamais franchir |
