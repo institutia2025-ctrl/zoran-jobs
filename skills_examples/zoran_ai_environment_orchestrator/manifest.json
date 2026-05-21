@@ -1,0 +1,53 @@
+{
+  "schema_version": "2.0",
+  "identity": {
+    "skill_id": "zoran_ai_environment_orchestrator",
+    "name": "Orchestrateur d'environnement IA",
+    "version": "1.0.0",
+    "hash": "sha256:6e426c38ca7a507bf3065040dd2b2ab15814e1ca168972ed2b03788dfe386911",
+    "signature": "zoran-meta-ai_environment_orchestrator",
+    "author": "Claude Code (skill méta — accès à l'intelligence)",
+    "created_at": "2026-05-22T00:00:00Z"
+  },
+  "io": {
+    "inputs": {"type": "object", "properties": {
+      "type_appareil": {"type": "string"}, "ram_go": {"type": "number"},
+      "stockage_libre_go": {"type": "number"}, "vram_go": {"type": "number"},
+      "batterie_pct": {"type": "number"}, "reseau": {"type": "string"}}},
+    "outputs": {"type": "object", "properties": {
+      "capacite": {"type": "string"}, "modeles_recommandes": {"type": "array"},
+      "modeles_refuses": {"type": "array"}, "moteur_local": {"type": "string"},
+      "repli_en_ligne": {"type": "string"}, "conseils": {"type": "array"},
+      "reference": {"type": "string"}}}
+  },
+  "routing": {
+    "domain": "ia_environnement",
+    "triggers": ["installer ia", "environnement ia", "scanner machine", "ia gratuite", "modele local"],
+    "description": "Audite une machine (ordinateur ou téléphone) et recommande la bonne IA — sans vocabulaire technique. V1 : audit + conseil, aucune installation."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.8, "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0, "corrective": false
+  },
+  "coherence_multi_frame": {
+    "global":       {"expected_delta_phi": 0.85, "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.45},
+    "exploitation": {"expected_delta_phi": 0.8,  "expected_T_added": 0.0,  "expected_sigma_added": 0.0, "weight": 0.35},
+    "cout":         {"expected_delta_phi": 0.6,  "expected_T_added": 0.05, "expected_sigma_added": 0.0, "weight": 0.2}
+  },
+  "futur_probable": [
+    {"horizon_an": 1, "evenement": "Sans audit préalable, installation d'un modèle incohérent avec la machine : échec, frustration et abandon de l'IA", "probabilite": 0.6, "gravite": "moyenne", "reference": "Friction d'accès à l'IA — la complexité d'installation est le premier facteur d'abandon"}
+  ],
+  "veto_capable": false,
+  "limites_explicites": [
+    "VERSION V1 SAFE : audit et recommandation uniquement — le skill n'installe RIEN. Le scan réel du matériel et l'installation guidée (avec validation de l'utilisateur) relèvent du harnais.",
+    "Le skill ne consulte pas Internet : il recommande des FAMILLES de moteurs, pas une liste à jour d'API gratuites — disponibilité et quotas du moment sont à vérifier.",
+    "Loi 1 : les caractéristiques de la machine sont fournies (résultat du scan) ; les seuils de mémoire par taille de modèle sont des ordres de grandeur (quantification Q4)."
+  ],
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
