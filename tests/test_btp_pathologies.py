@@ -186,11 +186,23 @@ out_ras = mod.run({"decollement_localise": False, "sonnant_creux": False,
 check("aucun desordre → nb=0, faible", out_ras["nb_desordres"] == 0 and out_ras["gravite"] == "faible")
 
 # Cas eleve : fissures dans carreaux
+# v1.1 : la gravite elevee exige une surface_affectee_pct >= 10% (seuil AQC depose) OU
+# une SPEC absente en local EB+/EC. Le simple cumul desordres reste "moyenne".
 out_hi = mod.run({"decollement_localise": False, "sonnant_creux": True,
                   "faiencage_joints": False, "fissures_carreaux": True,
-                  "taches_humidite": False, "classe_local": "EB"})
-check("fissures + sonnant creux → elevee",
-      out_hi["gravite"] == "elevee" and len(out_hi["origine_probable"]) >= 1)
+                  "taches_humidite": False, "classe_local": "EB",
+                  "surface_affectee_pct": 15.0})
+check("fissures + sonnant creux + surf 15% → depose_generale + elevee",
+      out_hi["gravite"] == "elevee" and out_hi["type_intervention"] == "depose_generale")
+check("origines tracees", len(out_hi["origine_probable"]) >= 1)
+
+# v1.1 : SPEC manquante en local EB+ avec taches humidite → reprise_etancheite + elevee
+out_spec = mod.run({"decollement_localise": False, "sonnant_creux": False,
+                    "faiencage_joints": False, "fissures_carreaux": False,
+                    "taches_humidite": True, "classe_local": "EB+",
+                    "presence_spec": False})
+check("taches humidite + EB+ sans SPEC → reprise_etancheite",
+      out_spec["type_intervention"] == "reprise_etancheite" and out_spec["spec_obligatoire"] is True)
 
 # Négatif : type bool manquant
 err = False

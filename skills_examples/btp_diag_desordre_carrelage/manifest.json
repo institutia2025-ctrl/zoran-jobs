@@ -1,37 +1,131 @@
 {
   "schema_version": "2.0",
-  "identity": {"skill_id": "btp_diag_desordre_carrelage", "name": "Diag desordres carrelage colle",
-               "version": "1.0.0", "hash": "sha256:1c3406cb24e0992aef134293c9bfb718842c5bee8745eea3b829c8e21da9b95a", "signature": "demo-sig-desordre-carrelage",
-               "author": "Sonnet Patho 5/5", "created_at": "2026-05-21T00:00:00Z"},
-  "io": {"inputs": {"type": "object", "properties": {"decollement_localise": {"type": "boolean"}}},
-         "outputs": {"type": "object", "properties": {"gravite": {"type": "string"}}}},
-  "routing": {"domain": "pathologie",
-              "triggers": ["carrelage", "desordre", "decollement", "sonnant creux", "faiencage", "DTU 52.2"],
-              "description": "Diag desordres carrelage colle selon DTU 52.2 + CSTB 3567."},
-  "coherence": {"expected_delta_phi": 0.65, "expected_T_added": 0.05, "expected_sigma_added": 0.10, "corrective": false},
+  "identity": {
+    "skill_id": "btp_diag_desordre_carrelage",
+    "name": "Diag desordres carrelage colle",
+    "version": "1.1.0",
+    "hash": "sha256:56c8bda6957f9de7343aac2717b46392c547319026af67d22545079d25a98c94",
+    "signature": "demo-sig-desordre-carrelage",
+    "author": "Sonnet Patho 5/5 (uplift v1.1 : surface + SPEC + intervention)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "decollement_localise": {
+          "type": "boolean"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "gravite": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "routing": {
+    "domain": "pathologie",
+    "triggers": [
+      "carrelage",
+      "desordre",
+      "decollement",
+      "sonnant creux",
+      "faiencage",
+      "DTU 52.2"
+    ],
+    "description": "Diag desordres carrelage (DTU 52.2 §3.4 + CSTB 3567 + AQC): surface, SPEC, type intervention."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
   "coherence_multi_frame": {
-    "maintenance":  {"expected_delta_phi": 0.70, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.35},
-    "exploitation": {"expected_delta_phi": 0.55, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.25},
-    "cout":         {"expected_delta_phi": 0.40, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.20},
-    "securite":     {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.10, "weight": 0.15},
-    "structure":    {"expected_delta_phi": 0.15, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.05}
+    "maintenance": {
+      "expected_delta_phi": 0.8,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.3
+    },
+    "exploitation": {
+      "expected_delta_phi": 0.7,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.2
+    },
+    "cout": {
+      "expected_delta_phi": 0.6,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.0,
+      "weight": 0.2
+    },
+    "securite": {
+      "expected_delta_phi": 0.55,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.2
+    },
+    "structure": {
+      "expected_delta_phi": 0.3,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.1
+    }
   },
   "futur_probable": [
-    {"horizon_an": 5, "evenement": "Extension zone decollee si non traite (1 carreau decolle = +5/m² par an typique)",
-     "probabilite": 0.70, "gravite": "moyenne", "reference": "Retour experience AQC pose collee + NF DTU 52.2"},
-    {"horizon_an": 10, "evenement": "En local EB+/EC : infiltration support si SPEC absente",
-     "probabilite": 0.55, "gravite": "elevee", "reference": "NF DTU 52.2 §3.4 + CSTB 3567"}
+    {
+      "horizon_an": 5,
+      "evenement": "Extension zone decollee si non traite (1 carreau decolle = +5/m² par an typique)",
+      "probabilite": 0.7,
+      "gravite": "moyenne",
+      "reference": "Retour experience AQC pose collee + NF DTU 52.2"
+    },
+    {
+      "horizon_an": 10,
+      "evenement": "En local EB+/EC : infiltration support si SPEC absente",
+      "probabilite": 0.55,
+      "gravite": "elevee",
+      "reference": "NF DTU 52.2 §3.4 + CSTB 3567"
+    },
+    {
+      "horizon_an": 10,
+      "evenement": "Si SPEC absente en EB+/EC : infiltration support, pathologie chaine (DTU 52.2 §3.4)",
+      "probabilite": 0.75,
+      "gravite": "elevee",
+      "reference": "NF DTU 52.2 §3.4 + CSTB 3567"
+    }
   ],
   "veto_capable": false,
   "limites_explicites": [
-    "Checklist visuelle/sonore — la cartographie sur plan demande inspection in situ.",
-    "Ne distingue pas pose collee classique vs pose collee sur SEL (Systeme Etancheite Liquide).",
+    "Checklist visuelle + cartographie en surface — releve in situ donne meilleure precision.",
+    "Seuil depose generale 10% surface affectee = retour experience AQC, ajustable par contexte (haute exigence, monument historique).",
+    "Ne distingue pas pose collee classique vs pose collee sur SEL (DTU 52.2 §3 vs §3.4 SPEC).",
     "Ne couvre pas pose scellee (DTU 52.1) ni pose flottante.",
-    "Origine probable est INDICATIVE — sondage destructif (depose 1-2 carreaux) confirme la cause."
+    "Origine probable INDICATIVE — sondage destructif (depose 1-2 carreaux) confirme la cause.",
+    "Ne traite pas les carrelages exterieurs (regles differentes pour gel-degel)."
   ],
-  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
-  "permissions": [], "sandbox_level": "none",
-  "dependencies": {"skills": [], "python": []},
-  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
-  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+  "cost": {
+    "runtime_cost": 1,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate"
 }

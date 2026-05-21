@@ -3,7 +3,7 @@
 [![tests](https://github.com/institutia2025-ctrl/zoran-jobs/actions/workflows/tests.yml/badge.svg)](https://github.com/institutia2025-ctrl/zoran-jobs/actions/workflows/tests.yml)
 [![python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/)
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![assertions](https://img.shields.io/badge/assertions-190%20PASS%20%2F%200%20FAIL-brightgreen)](#7-lancer)
+[![assertions](https://img.shields.io/badge/assertions-192%20PASS%20%2F%200%20FAIL-brightgreen)](#7-lancer)
 [![phase](https://img.shields.io/badge/phase-1%20MVP%20frozen-blue)]()
 [![phase4](https://img.shields.io/badge/phase%204-NO--GO%20(1%2F13)-red)](audit/PHASE_4_GO_NOGO.md)
 
@@ -104,7 +104,7 @@ python tests/stress/massive_validation.py # stress / chaos / reproductib. → 15
 python tests/test_coherence_unit.py      # moteur de cohérence isolé      → 12 PASS
 ```
 
-**Total : 190 assertions, 0 échec.** (V1 + V2 + BTP Phase A) CI multi-OS multi-version vérifie à chaque commit.
+**Total : 192 assertions, 0 échec.** (V1 + V2 + BTP Phase A) CI multi-OS multi-version vérifie à chaque commit.
 
 > **Transmissibilité prouvée** (DÉMO 1, 2026-05-21) : une intelligence sans aucun contexte a reconstruit et fait revivre ce runtime depuis le dépôt seul. Voir `tests/reconstruction/`.
 >

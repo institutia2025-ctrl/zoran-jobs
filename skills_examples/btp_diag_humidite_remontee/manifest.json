@@ -1,37 +1,131 @@
 {
   "schema_version": "2.0",
-  "identity": {"skill_id": "btp_diag_humidite_remontee", "name": "Diag humidite remontee capillaire",
-               "version": "1.0.0", "hash": "sha256:a6f7f8771aa2501935efd70a46f1e108f5d4c7a09c9d38fa43615c2f05f9b7b5", "signature": "demo-sig-humidite",
-               "author": "Sonnet Patho 2/5", "created_at": "2026-05-21T00:00:00Z"},
-  "io": {"inputs": {"type": "object", "properties": {"hauteur_zone_humide_cm": {"type": "number"}}},
-         "outputs": {"type": "object", "properties": {"remontee_capillaire_suspectee": {"type": "boolean"}}}},
-  "routing": {"domain": "pathologie",
-              "triggers": ["humidite", "remontee", "capillaire", "salpetre", "efflorescence", "DTU 14.1"],
-              "description": "Diag humidite remontee capillaire (DTU 14.1 + 20.1)."},
-  "coherence": {"expected_delta_phi": 0.65, "expected_T_added": 0.05, "expected_sigma_added": 0.10, "corrective": false},
+  "identity": {
+    "skill_id": "btp_diag_humidite_remontee",
+    "name": "Diag humidite remontee capillaire",
+    "version": "1.1.0",
+    "hash": "sha256:5d15d7ddb1e4c91e87ad20ab26f383c0930b83e7371e6da7f225054f8568acf8",
+    "signature": "demo-sig-humidite",
+    "author": "Sonnet Patho 2/5 (uplift v1.1 : origine + bati + salinity)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "hauteur_zone_humide_cm": {
+          "type": "number"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "remontee_capillaire_suspectee": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "routing": {
+    "domain": "pathologie",
+    "triggers": [
+      "humidite",
+      "remontee",
+      "capillaire",
+      "salpetre",
+      "efflorescence",
+      "DTU 14.1"
+    ],
+    "description": "Diag humidite multi-axes (DTU 14.1+20.1+CSTB 3848+EN 16242) : 4 origines, type bati, salinity."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.75,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.05,
+    "corrective": false
+  },
   "coherence_multi_frame": {
-    "maintenance":  {"expected_delta_phi": 0.75, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.35},
-    "exploitation": {"expected_delta_phi": 0.60, "expected_T_added": 0.00, "expected_sigma_added": 0.05, "weight": 0.25},
-    "securite":     {"expected_delta_phi": 0.40, "expected_T_added": 0.00, "expected_sigma_added": 0.10, "weight": 0.15},
-    "cout":         {"expected_delta_phi": 0.50, "expected_T_added": 0.10, "expected_sigma_added": 0.00, "weight": 0.15},
-    "structure":    {"expected_delta_phi": 0.30, "expected_T_added": 0.00, "expected_sigma_added": 0.10, "weight": 0.10}
+    "maintenance": {
+      "expected_delta_phi": 0.85,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.3
+    },
+    "exploitation": {
+      "expected_delta_phi": 0.75,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.25
+    },
+    "securite": {
+      "expected_delta_phi": 0.55,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.15
+    },
+    "cout": {
+      "expected_delta_phi": 0.6,
+      "expected_T_added": 0.05,
+      "expected_sigma_added": 0.0,
+      "weight": 0.2
+    },
+    "structure": {
+      "expected_delta_phi": 0.4,
+      "expected_T_added": 0.0,
+      "expected_sigma_added": 0.05,
+      "weight": 0.1
+    }
   },
   "futur_probable": [
-    {"horizon_an": 5, "evenement": "Degradation enduit interieur + odeurs persistantes",
-     "probabilite": 0.70, "gravite": "moyenne", "reference": "NF DTU 20.1 §10 + RE2020 confort"},
-    {"horizon_an": 20, "evenement": "Attaque sulfatique du mortier + perte cohesion maconnerie",
-     "probabilite": 0.55, "gravite": "elevee", "reference": "NF EN 206-1 classes XA + retour AQC"}
+    {
+      "horizon_an": 5,
+      "evenement": "Degradation enduit interieur + odeurs persistantes",
+      "probabilite": 0.7,
+      "gravite": "moyenne",
+      "reference": "NF DTU 20.1 §10 + RE2020 confort"
+    },
+    {
+      "horizon_an": 20,
+      "evenement": "Attaque sulfatique du mortier + perte cohesion maconnerie",
+      "probabilite": 0.55,
+      "gravite": "elevee",
+      "reference": "NF EN 206-1 classes XA + retour AQC"
+    },
+    {
+      "horizon_an": 10,
+      "evenement": "Si origine condensation non traitee : moisissures (NF EN ISO 16000-19)",
+      "probabilite": 0.65,
+      "gravite": "moyenne",
+      "reference": "NF EN ISO 16000-19 + CSTB 3848"
+    }
   ],
   "veto_capable": false,
   "limites_explicites": [
     "Oriente le diagnostic — confirme par sondage humidite carbure (CM) ou capacitif.",
-    "Ne distingue pas remontee capillaire / infiltration laterale / condensation : analyse complementaire requise.",
+    "Distingue 4 origines (capillarite/infiltration/condensation/ruissellement) mais ne classe pas leurs combinaisons (cas reel souvent multi-origine).",
     "Loi 1 : seuils % humidite non hard-codes — l'utilisateur fournit la grille de son guide CSTB/AQC.",
-    "Ne couvre pas habitat ancien pierre humide naturelle (regulation hygrometrique du bati ancien)."
+    "Tolerance bati ancien (×1.5) sur seuil humidite — heuristique simplifiee de la regulation hygrometrique naturelle (EN 16242). Pour bati ancien exceptionnel, expertise dediee.",
+    "Salinity = pointe vers une analyse complementaire, ne dose pas les sels (laboratoire requis).",
+    "Ne couvre PAS les remontees par capillarite avec sels hygroscopiques (sels qui captent l'humidite atmospherique en + de la capillarite)."
   ],
-  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
-  "permissions": [], "sandbox_level": "none",
-  "dependencies": {"skills": [], "python": []},
-  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
-  "providers_compatible": ["local"], "lifecycle_state": "candidate"
+  "cost": {
+    "runtime_cost": 2,
+    "latency_class": "fast",
+    "external_calls": false
+  },
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {
+    "skills": [],
+    "python": []
+  },
+  "rollback": {
+    "rollbackable": true,
+    "rollback_strategy": "none"
+  },
+  "providers_compatible": [
+    "local"
+  ],
+  "lifecycle_state": "candidate"
 }

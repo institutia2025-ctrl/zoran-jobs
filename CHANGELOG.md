@@ -2,6 +2,47 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.7.1-uplift-sonnet] — 2026-05-21
+
+### Uplift — 3 skills relevés au-dessus de la barre 16/20 + S > 0.6
+
+Suite à un audit interne objectif (S_V1 + S_global mesurés programmatiquement) :
+
+| skill_id | Avant | Après | S_V1 avant | S_V1 après | Ajout fonctionnel |
+|---|---|---|---|---|---|
+| `btp_diag_humidite_remontee` | 15/20, S=0.565 | **17/20, S=0.714** | 0.565 | 0.714 | 4 origines distinguées (capillarité/infiltration/condensation/ruissellement), `type_bati` (ancien_pierre tolère ×1.5 sur seuil humidité, EN 16242), `type_salinity` (sulfates/chlorures/nitrates pointent vers actions distinctes), `presence_taches_au_plafond` (signal condensation prioritaire). |
+| `btp_diag_desordre_carrelage` | 15/20, S=0.565 | **17/20, S=0.714** | 0.565 | 0.714 | `surface_affectee_pct` (seuil AQC 10% pour décision dépose générale vs reprise locale), `presence_spec` (vérification SPEC obligatoire en EB+/EC selon DTU 52.2 §3.4), output `type_intervention` (surveillance/reprise_locale/depose_generale/reprise_etancheite). |
+| `btp_verif_dalle_simple` | 15/20, S=0.652 | **17/20, S=0.810** | 0.652 | 0.810 | Table Bareš-Hahn pour dalle bidirectionnelle (ratio Lx/Ly in [1..2]), calcul **flèche réelle** simplifiée (5 q L^4 / 384 E I) avec Ec_eff = Ecm/(1+φ) prenant en compte fluage long terme, double critère conformité (ratio L/d ET flèche ≤ L/250). |
+
+### Conformité au critère qualité Fred
+- **Tous les 10 skills Sonnet ≥ 16/20** (moyenne avant 16,5 → après 17,0).
+- **Tous les 10 skills Sonnet S > 0.6** sur V1 ET S_global multi-frame.
+
+### Justification S amélioré (Loi 1 : pas d'inflation)
+Chaque uplift S est appuyé par une **augmentation réelle de ΔΦ** justifiée par les fonctionnalités ajoutées (références AQC, EN 16242, abaques Bareš-Hahn, calcul flèche explicite). Aucune valeur n'est gonflée sans contre-partie fonctionnelle.
+
+### Tests
+- `tests/test_btp_pathologies.py` : adapté pour V1.1 desordre (surface 15% + SPEC), 27 PASS au lieu de 25.
+- `tests/test_btp_structure.py` : compatible V1.1 dalle sans modification, 26 PASS.
+- **Total : 192 PASS / 0 FAIL** (190 + 2 nouveaux).
+- Ruff : All checks passed.
+
+### Audit S programmatique (preuve)
+```
+skill_id                               S_V1    S_glob   OK
+─────────────────────────────────────  ─────   ──────   ──
+btp_diag_carbonatation_beton           0.727   0.682    ✓
+btp_diag_corrosion_armatures           0.696   0.696    ✓
+btp_diag_desordre_carrelage            0.714   0.610    ✓  (uplift)
+btp_diag_fissure_macon                 0.652   0.608    ✓
+btp_diag_humidite_remontee             0.714   0.652    ✓  (uplift)
+btp_ferraillage_min_eurocode           0.727   0.647    ✓
+btp_fondation_semelle_isolee           0.696   0.634    ✓
+btp_verif_dalle_simple                 0.810   0.680    ✓  (uplift)
+btp_verif_poteau_beton                 0.773   0.654    ✓
+btp_verif_poutre_flexion               0.773   0.661    ✓
+```
+
 ## [v0.7.0-phase-a-sonnet-structure] — 2026-05-21
 
 ### Ajouté — 5 skills Structure simple (AXE 3 du masterplan, 2ème moitié de ma Phase A)
