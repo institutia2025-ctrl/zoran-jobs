@@ -2,6 +2,35 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.3.0-phase-a-btp] — 2026-05-21
+
+### Ajouté — 5 skills BTP (Phase A : preuve de méthode)
+
+Catalogue emblématique, un skill par niveau de complexité métier :
+
+| skill_id | Niveau | Domaine | Référence | Triggers |
+|---|---|---|---|---|
+| `palette_harmonique` | Décorateur | decoration | Théorie HSL (triadique) | palette, couleur, harmonie |
+| `verif_dtu_carrelage` | Maître d'œuvre | construction | NF DTU 52.2 (déc. 2009) | dtu 52, carrelage, planéité |
+| `planning_gantt_simple` | Conducteur travaux | construction | CPM (Kelley-Walker, ISO 21500) | planning, gantt, chemin critique |
+| `descente_charges_simple` | Ingénieur génie civil | structure | NF EN 1990 + NF EN 1991-1-1 | descente, charges, ELU, eurocode |
+| `verif_seisme_classe1_asn` | Ingénieur nucléaire | nucléaire | RFS 2001-01 (ASN, mai 2001) | séisme, ASN, RFS, EIPS, SMHV |
+
+### Tests
+- `tests/test_btp_skills.py` : **22 assertions** (positif + négatif chaque skill + 5 routages end-to-end)
+- Tests existants : intacts, 97 PASS (registry/runtime/cinématique/oracle/immune/stress/coherence_unit)
+- **Total : 119 PASS / 0 FAIL** (réplication indépendante confirmée 2026-05-21)
+- Ruff : All checks passed.
+
+### Vérifié
+- Le Router de ZORAN's Jobs sélectionne le bon skill BTP pour 5/5 prompts métier naturels.
+- Aucun NO-GO franchi : skills statiques dans `skills_examples/`, pas de découverte distante.
+- Loi 1 (jamais inventer) : toutes les références (DTU 52.2, Eurocodes, RFS 2001-01) sont publiques et vérifiables.
+
+### À noter
+- Tous les skills sont marqués MVP démonstratif (calculs simplifiés). Ils prouvent le pattern. Phase B = approfondissement par domaine après audit.
+- Le contrat ZORAN_SKILL_CONTRACT.md tient sans modification : 5 skills de 5 niveaux différents l'ont validé.
+
 ## [v0.2.0-alpha-validation] — 2026-05-21
 
 ### Ajouté

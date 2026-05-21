@@ -38,6 +38,8 @@ jobs:
         run: python tests/test_immune.py
       - name: massive_validation stress (15)
         run: python tests/stress/massive_validation.py
+      - name: test_btp_skills (22)
+        run: python tests/test_btp_skills.py
       - name: test_coherence_unit (12)
         run: python tests/test_coherence_unit.py
 
