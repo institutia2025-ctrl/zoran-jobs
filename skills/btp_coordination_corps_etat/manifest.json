@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "btp_coordination_corps_etat",
+    "name": "Coordination des corps d'état",
+    "version": "1.0.0",
+    "hash": "sha256:7c4efdcae53dcce65a6860cbb5f1f8840c68dd8df904c8b3fbdc6b7f8e186e9c",
+    "signature": "phase-a-cc-btp_coordination_corps_etat",
+    "author": "Claude Code (Phase A — lot Claude Code, conduite)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "taches": {"type": "array"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "ordre_execution": {"type": "array"},
+        "cycle_detecte": {"type": "boolean"},
+        "chemin_critique": {"type": "array"},
+        "duree_totale": {"type": "number"},
+        "nb_taches": {"type": "number"},
+        "verdict": {"type": "string"}
+      }
+    }
+  },
+  "routing": {
+    "domain": "conduite_chantier",
+    "triggers": ["coordination", "planning", "taches", "ordonnancer", "corps"],
+    "description": "Ordonnance les corps d'état par graphe d'antécédence (tri topologique + chemin critique)."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.5,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

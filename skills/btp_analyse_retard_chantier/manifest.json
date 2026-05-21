@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "btp_analyse_retard_chantier",
+    "name": "Analyse de retard de chantier",
+    "version": "1.0.0",
+    "hash": "sha256:25fc61064d2d8864d1d9db4abc0a36d25f1d7dce8727b0f2e3d02f539c61a988",
+    "signature": "phase-a-cc-btp_analyse_retard_chantier",
+    "author": "Claude Code (Phase A — lot Claude Code, conduite)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "description_retard": {"type": "string"},
+        "chaine_pourquoi": {"type": "array"},
+        "probabilite": {"type": "number"},
+        "gravite": {"type": "number"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "cause_racine": {"type": "string"},
+        "profondeur_analyse": {"type": "number"},
+        "analyse_complete": {"type": "boolean"},
+        "criticite": {"type": "number"},
+        "niveau_criticite": {"type": "string"},
+        "recommandation": {"type": "string"}
+      }
+    }
+  },
+  "routing": {
+    "domain": "conduite_chantier",
+    "triggers": ["retard", "chantier", "analyser", "cause", "pourquoi"],
+    "description": "Analyse un retard de chantier par 5 pourquoi + matrice de criticité 5x5."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.5,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {"runtime_cost": 1, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}

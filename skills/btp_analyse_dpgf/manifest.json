@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "identity": {
+    "skill_id": "btp_analyse_dpgf",
+    "name": "Analyse de DPGF",
+    "version": "1.0.0",
+    "hash": "sha256:6302ac9c4bdeecab5c3808113e8d0d8004d6b53ab897765c7d613810de1f0ee2",
+    "signature": "phase-a-cc-btp_analyse_dpgf",
+    "author": "Claude Code (Phase A — lot Claude Code, economie)",
+    "created_at": "2026-05-21T00:00:00Z"
+  },
+  "io": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "lignes": {"type": "array"}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "properties": {
+        "nb_lignes": {"type": "number"},
+        "anomalies": {"type": "array"},
+        "nb_anomalies": {"type": "number"},
+        "total_calcule_eur": {"type": "number"},
+        "coherent": {"type": "boolean"},
+        "verdict": {"type": "string"}
+      }
+    }
+  },
+  "routing": {
+    "domain": "economie_construction",
+    "triggers": ["dpgf", "anomalie", "decomposition", "analyser", "prix"],
+    "description": "Analyse une DPGF et détecte les anomalies de cohérence prix/quantité/montant."
+  },
+  "coherence": {
+    "expected_delta_phi": 0.5,
+    "expected_T_added": 0.0,
+    "expected_sigma_added": 0.0,
+    "corrective": false
+  },
+  "cost": {"runtime_cost": 2, "latency_class": "fast", "external_calls": false},
+  "permissions": [],
+  "sandbox_level": "none",
+  "dependencies": {"skills": [], "python": []},
+  "rollback": {"rollbackable": true, "rollback_strategy": "none"},
+  "providers_compatible": ["local"],
+  "lifecycle_state": "candidate"
+}
