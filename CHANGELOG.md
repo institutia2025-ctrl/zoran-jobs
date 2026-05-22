@@ -2,6 +2,23 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.11.1-archivage-cc] — 2026-05-22
+
+### Changé — archivage sans dépendance à un compte tiers
+
+Le compte Zenodo du propriétaire ayant été fermé, la voie « DOI Zenodo » n'est
+plus praticable. Remplacée par une approche **sans compte tiers** :
+
+- `ZENODO.md` → `ARCHIVAGE.md` — antériorité par l'historique git (arbre de
+  Merkle, dates de push horodatées), snapshot citable par **GitHub Release**,
+  archivage pérenne par **Software Heritage** (SWHID, adressé par contenu,
+  aucun compte requis).
+- `.zenodo.json` retiré (intégration Zenodo abandonnée).
+- `CITATION.cff` conservé tel quel : il ne dépend d'aucun DOI.
+
+Leçon cohérente avec la philosophie du dépôt : préférer l'adressage par contenu
+à la dépendance envers une autorité externe révocable.
+
 ## [v0.11.0-hardening-cc] — 2026-05-22
 
 ### Ajouté — test de mutation de l'oracle
