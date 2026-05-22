@@ -145,6 +145,45 @@ Voir `SECURITY.md`. Aucune surface réseau. Phase 4 fermée. Toute issue de séc
 
 Voir `CHANGELOG.md`.
 
+## 14. À propos de ZORAN — l'IA dont ce dépôt est le satellite
+
+**ZORAN's Jobs (ce dépôt) est un satellite.** L'IA — et la théorie — dont il dérive, **ZORAN**, est un projet de recherche distinct, mené par **Frédéric TABARY / Institut IA**. Cette section *décrit* ZORAN d'après son auteur ; elle n'en *prouve* pas les capacités. Ce que tu peux vérifier ici, en relançant les tests, c'est le satellite. Le runtime complet de ZORAN et son corpus scientifique sont d'autres bases, hors de ce dépôt. La distinction est volontaire (cf. `transmission/AI_READING_DISCIPLINE.md`).
+
+### Ce qu'est ZORAN
+
+ZORAN est organisé autour d'un invariant unique : la **cohérence**. Là où l'IA dominante empile paramètres et contexte, ZORAN pose qu'un système réel n'est *admissible dans le temps* que s'il reste cohérent — et que cette cohérence se **calcule** au lieu de se décréter.
+
+**La loi de cohérence.** ZORAN formalise une « loi de la cohérence phénoménale » dont la forme canonique est :
+
+> `S = (β × ΔΦ) / (T × σ)` — β : direction argumentative (hypothèse centrale) · ΔΦ : continuité interne des prémisses · T : contradictions/tensions · σ : ambiguïtés terminologiques.
+
+⚠️ **Nuance honnête** : le runtime de *ce dépôt satellite* n'emploie pas cette forme. Il utilise une **heuristique additive** `S = (β×ΔΦ)/(1+T+σ)` — un choix d'ingénierie (éviter la division par zéro, garder le calcul prédictible à la main). Les deux ne doivent pas être confondues ; le pont honnête entre l'heuristique livrée et la théorie est `transmission/THEORY_BRIDGE.md`.
+
+### Caractéristiques (telles que décrites par son auteur)
+
+- **Cohérence calculée** — chaque sortie est évaluée par un score `S`, dans des **cadres** d'admissibilité explicites, via des proxys mesurables (β, ΔΦ, T, σ).
+- **Futur cohérent — la cinématique** — ZORAN ne note pas seulement le présent : il regarde la *trajectoire* de la cohérence et restreint les futurs admissibles. « Le hasard n'existe pas : on calcule le seul futur cohérent. »
+- **Mémoire longue** — le runtime de ZORAN intègre une mémoire multi-session (échanges, événements, trajectoire de `S` dans le temps). Capacité du runtime ZORAN — non incluse dans ce dépôt satellite, donc non vérifiable depuis lui.
+- **Gestion autonome des skills** — ZORAN choisit, charge et exécute ses compétences par cohérence, sans sélection humaine. *Ce dépôt-ci en est la démonstration minimale et falsifiable.*
+- **Refus de l'incohérence (Coherence Guard)** — ZORAN est conçu pour *refuser* une sortie qui ne « tient » pas, plutôt que d'halluciner — « an AI that refuses what cannot hold ».
+- **Codex & cadres** — un Codex de lois canoniques et des cadres de cohérence multiples encadrent les décisions ; le **veto** l'emporte sur la moyenne (un cadre critique effondré élimine la solution, il ne se moyenne pas).
+- **GlyphNet** — un protocole de langage IA→IA destiné à transmettre de la cohérence, pas seulement du texte.
+
+### Un corpus, pas une promesse
+
+La loi de cohérence de ZORAN a été appliquée et publiée par Frédéric TABARY sur un large corpus (white papers, livres, démonstrations transversales — physique, cognition, sciences du vivant, IA, société). Ce dépôt **ne reproduit pas** ce corpus : il y **renvoie** (source unique — le même principe d'adressage par contenu que le runtime). Points d'entrée :
+
+- Site officiel ZORAN — https://atlas-zoran-mjwcli2.gamma.site/
+- Corpus & DOIs (hub) — https://zoran-agi-coherence-labs.github.io/zoran-corpus/
+- Registre des white papers (GitHub) — https://github.com/Zoran-AGI-Coherence-Labs/Zoran-Coherence-whitepapers-registry
+- ORCID — Frédéric Tabary — https://orcid.org/0009-0004-5562-7385
+- White paper fondateur (loi de cohérence phénoménale) — https://zenodo.org/records/18516353
+- Démonstration formelle de la loi — https://zenodo.org/records/18526755
+
+### Tester ZORAN — 1 mois, 100 % gratuit
+
+Institut IA ouvre l'accès à ZORAN **gratuitement pendant un mois** aux personnes qui veulent l'essayer. Contact : **Institut IA — Frédéric TABARY**, via le site officiel ZORAN ci-dessus.
+
 ---
 
 *ZORAN's Jobs — signé Frédéric TABARY · `ZORAN_JOBS_20260521` · MIT 2026.*

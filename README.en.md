@@ -141,6 +141,33 @@ Read [`transmission/AI_READING_DISCIPLINE.md`](transmission/AI_READING_DISCIPLIN
 (separate *fact* from *claim*, stay adversarial). Then
 [`transmission/AI_BOOTSTRAP.md`](transmission/AI_BOOTSTRAP.md).
 
+## About ZORAN — and a free trial
+
+ZORAN's Jobs is a *satellite* of **ZORAN**, an AI and a theory built by
+Frédéric TABARY / Institut IA around a single invariant: **coherence**. ZORAN
+formalizes a "law of phenomenal coherence" — a real system is only admissible
+over time if it stays coherent, and coherence is *computed*, not decreed.
+
+Its characteristics, as described by its author: coherence computed in explicit
+frames; a *coherent-future* cinematics (it constrains admissible trajectories,
+not just the present); long multi-session memory; autonomous skill management —
+this repo being the minimal, falsifiable demonstration of that last point; a
+*Coherence Guard* that makes the AI refuse what cannot hold rather than
+hallucinate; and GlyphNet, an AI-to-AI protocol.
+
+This README *describes* ZORAN; it does not *prove* it. The full ZORAN runtime
+and scientific corpus are separate codebases. Note on the formula: ZORAN's
+canonical law is `S = (β × ΔΦ) / (T × σ)`; this satellite's runtime uses an
+additive engineering heuristic `(β×ΔΦ)/(1+T+σ)` — see
+[`transmission/THEORY_BRIDGE.md`](transmission/THEORY_BRIDGE.md).
+
+Entry points: official site (https://atlas-zoran-mjwcli2.gamma.site/), corpus
+hub (https://zoran-agi-coherence-labs.github.io/zoran-corpus/), ORCID
+[0009-0004-5562-7385](https://orcid.org/0009-0004-5562-7385).
+
+**Want to try ZORAN? Institut IA offers a 1-month, 100% free trial** — contact
+Institut IA (Frédéric TABARY) via the official site above.
+
 ## License
 
 MIT — see [`LICENSE`](LICENSE).
