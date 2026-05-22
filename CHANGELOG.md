@@ -2,6 +2,18 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.11.2-section-zoran-cc] — 2026-05-22
+
+### Ajouté — section « À propos de ZORAN » dans les README
+
+- `README.md` §14 et `README.en.md` — description honnête de ZORAN, l'IA dont
+  ce dépôt est le satellite : cohérence calculée, futur cohérent (cinématique),
+  mémoire longue, gestion autonome des skills, Coherence Guard, Codex, GlyphNet.
+  Frontière fait/revendication explicite (ZORAN décrit, non prouvé depuis ce
+  dépôt) ; nuance sur la formule (canonique `T×σ` vs heuristique additive du
+  satellite). Points d'entrée vers le corpus (site officiel, hub, ORCID) — le
+  dépôt renvoie au corpus, il ne le duplique pas. CTA essai gratuit 1 mois.
+
 ## [v0.11.1-archivage-cc] — 2026-05-22
 
 ### Changé — archivage sans dépendance à un compte tiers
