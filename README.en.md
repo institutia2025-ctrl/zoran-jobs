@@ -163,10 +163,12 @@ additive engineering heuristic `(β×ΔΦ)/(1+T+σ)` — see
 
 Entry points: official site (https://atlas-zoran-mjwcli2.gamma.site/), corpus
 hub (https://zoran-agi-coherence-labs.github.io/zoran-corpus/), ORCID
-[0009-0004-5562-7385](https://orcid.org/0009-0004-5562-7385).
+[0009-0004-5562-7385](https://orcid.org/0009-0004-5562-7385),
+[ResearchGate](https://www.researchgate.net/profile/Frederic-Tabary).
 
 **Want to try ZORAN? Institut IA offers a 1-month, 100% free trial** — contact
-Institut IA (Frédéric TABARY) via the official site above.
+Institut IA (Frédéric TABARY) at **institutia2025@gmail.com** or via the
+official site above.
 
 ## License
 

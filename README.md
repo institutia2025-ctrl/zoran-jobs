@@ -176,13 +176,13 @@ La loi de cohérence de ZORAN a été appliquée et publiée par Frédéric TABA
 - Site officiel ZORAN — https://atlas-zoran-mjwcli2.gamma.site/
 - Corpus & DOIs (hub) — https://zoran-agi-coherence-labs.github.io/zoran-corpus/
 - Registre des white papers (GitHub) — https://github.com/Zoran-AGI-Coherence-Labs/Zoran-Coherence-whitepapers-registry
-- ORCID — Frédéric Tabary — https://orcid.org/0009-0004-5562-7385
 - White paper fondateur (loi de cohérence phénoménale) — https://zenodo.org/records/18516353
 - Démonstration formelle de la loi — https://zenodo.org/records/18526755
+- Profils de l'auteur — ORCID [0009-0004-5562-7385](https://orcid.org/0009-0004-5562-7385) · [ResearchGate](https://www.researchgate.net/profile/Frederic-Tabary) · [LinkedIn](https://www.linkedin.com/in/frederic-tabary/) · [Medium](https://medium.com/@tabary01)
 
 ### Tester ZORAN — 1 mois, 100 % gratuit
 
-Institut IA ouvre l'accès à ZORAN **gratuitement pendant un mois** aux personnes qui veulent l'essayer. Contact : **Institut IA — Frédéric TABARY**, via le site officiel ZORAN ci-dessus.
+Institut IA ouvre l'accès à ZORAN **gratuitement pendant un mois** aux personnes qui veulent l'essayer. Contact : **Institut IA — Frédéric TABARY** — e-mail **institutia2025@gmail.com**, ou via le site officiel ZORAN ci-dessus.
 
 ---
 
