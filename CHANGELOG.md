@@ -2,6 +2,30 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/), [SemVer](https://semver.org/).
 
+## [v0.11.0-hardening-cc] — 2026-05-22
+
+### Ajouté — test de mutation de l'oracle
+
+- `tests/test_mutation_oracle.py` — mutation testing maison, zéro dépendance.
+  Applique 53 mutations (opérateurs de comparaison, booléens, arithmétiques,
+  constantes booléennes) à `skill.py` de l'oracle et vérifie que la batterie
+  de contrôle tue chaque mutant. Charge le code muté **directement** (hors
+  Loader) car le hash sha256 tuerait sinon tous les mutants trivialement.
+- 4 trous de test révélés au premier passage (types non numériques non
+  rejetés ; borne `charge_par_agent = 0` ; coût API confondu avec `api/cout`
+  quand `cout = 1.0`) → corrigés : **53/53 mutants tués, 100 %**.
+- `tests/test_zoran_oracle_adaptation.py` — 7 assertions ajoutées pour les
+  mêmes trous (27 → **34 PASS**). Étape CI ajoutée pour le test de mutation.
+
+### Ajouté — préparation d'un DOI Zenodo
+
+- `CITATION.cff` — métadonnées de citation (encart « Cite this repository »).
+- `.zenodo.json` — métadonnées d'archivage Zenodo (version dérivée du tag de
+  release, non figée à la main).
+- `ZENODO.md` — procédure pour frapper le DOI. Honnête : tant que le
+  propriétaire n'a pas activé l'intégration Zenodo↔GitHub et publié une
+  release, **le dépôt n'a pas de DOI** — seulement les métadonnées prêtes.
+
 ## [v0.10.1-readme-en-cc] — 2026-05-22
 
 ### Ajouté — README anglais (découvrabilité)

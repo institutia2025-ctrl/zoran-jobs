@@ -101,6 +101,19 @@ check("budget : API plafonnée à 3 agents finançables (budget 3)",
       r["agents_a_mobiliser"] == {"api": 3, "local": 0})
 check("budget : budget après cycle = 0.0", r["budget_apres_cycle"] == 0.0)
 
+# --- Coût API != 1.0 : le coût du cycle suit api_utilises × cout_api --------
+r = run({
+    "etapes": [{"id": f"e{i}", "statut": "a_faire", "charge": 1}
+               for i in range(4)],
+    "agents_disponibles": {"api": 5, "local": 0}, "budget_restant": 100,
+    "cout_api_par_agent": 2.0,
+})
+check("coût : 4 agents API × 2.0 → coût du cycle = 8.0",
+      r["agents_a_mobiliser"] == {"api": 4, "local": 0}
+      and r["cout_estime_cycle"] == 8.0)
+check("coût : budget après cycle = 100 - 8 = 92.0",
+      r["budget_apres_cycle"] == 92.0)
+
 # --- STOP_INCOHERENCE : prioritaire sur le budget ---------------------------
 r = run({
     "etapes": [{"id": "e1", "statut": "a_faire", "charge": 1}],
@@ -192,6 +205,24 @@ check("négatif : cycle < 1 → ValueError",
 check("négatif : nombre d'agents négatif → ValueError",
       raises_value_error({"etapes": [{"id": "e1", "statut": "a_faire"}],
                           "agents_disponibles": {"api": -1}}))
+check("négatif : budget non numérique (chaîne) → ValueError",
+      raises_value_error({"etapes": [{"id": "e1", "statut": "a_faire"}],
+                          "agents_disponibles": {"api": 1},
+                          "budget_restant": "100"}))
+check("négatif : budget booléen → ValueError",
+      raises_value_error({"etapes": [{"id": "e1", "statut": "a_faire"}],
+                          "agents_disponibles": {"api": 1},
+                          "budget_restant": True}))
+check("négatif : nombre d'agents booléen → ValueError",
+      raises_value_error({"etapes": [{"id": "e1", "statut": "a_faire"}],
+                          "agents_disponibles": {"api": True}}))
+check("négatif : nombre d'agents flottant → ValueError",
+      raises_value_error({"etapes": [{"id": "e1", "statut": "a_faire"}],
+                          "agents_disponibles": {"api": 1.5}}))
+check("négatif : charge_par_agent nul → ValueError",
+      raises_value_error({"etapes": [{"id": "e1", "statut": "a_faire"}],
+                          "agents_disponibles": {"api": 1},
+                          "charge_par_agent": 0}))
 
 # ============================================================================
 print()
