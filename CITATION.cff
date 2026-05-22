@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+title: "ZORAN's Jobs"
+abstract: >-
+  A deterministic, falsifiable skill runtime, and an oracle providing a
+  coherent stop-criterion for autonomous agent loops — a "brain" layer
+  pluggable into existing agentic frameworks (LangGraph, CrewAI, AutoGen)
+  without rewriting them. Zero external dependency for the runtime; the
+  coherence engine is fully mathematical, with no LLM.
+type: software
+authors:
+  - family-names: TABARY
+    given-names: Frédéric
+license: MIT
+repository-code: "https://github.com/institutia2025-ctrl/zoran-jobs"
+url: "https://github.com/institutia2025-ctrl/zoran-jobs"
+date-released: 2026-05-22
+keywords:
+  - autonomous agents
+  - agent orchestration
+  - stop criterion
+  - falsifiability
+  - deterministic runtime
+  - coherence
+  - LangGraph
+  - CrewAI

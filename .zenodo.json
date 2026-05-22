@@ -1,0 +1,20 @@
+{
+  "title": "ZORAN's Jobs",
+  "description": "A deterministic, falsifiable skill runtime, and an oracle providing a coherent stop-criterion for autonomous agent loops - a 'brain' layer pluggable into existing agentic frameworks (LangGraph, CrewAI, AutoGen) without rewriting them. Zero external dependency for the runtime; the coherence engine is fully mathematical, with no LLM.",
+  "upload_type": "software",
+  "license": "MIT",
+  "access_right": "open",
+  "creators": [
+    {"name": "TABARY, Frédéric"}
+  ],
+  "keywords": [
+    "autonomous agents",
+    "agent orchestration",
+    "stop criterion",
+    "falsifiability",
+    "deterministic runtime",
+    "coherence",
+    "LangGraph",
+    "CrewAI"
+  ]
+}

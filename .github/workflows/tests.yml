@@ -60,10 +60,12 @@ jobs:
         run: python tests/test_zoran_magasin_contenu.py
       - name: test_zoran_ai_environment (12)
         run: python tests/test_zoran_ai_environment.py
-      - name: test_zoran_oracle_adaptation (27)
+      - name: test_zoran_oracle_adaptation (34)
         run: python tests/test_zoran_oracle_adaptation.py
       - name: test_zoran_video_publication (33)
         run: python tests/test_zoran_video_publication.py
+      - name: test_mutation_oracle (mutation testing)
+        run: python tests/test_mutation_oracle.py
 
   lint:
     name: ruff lint
