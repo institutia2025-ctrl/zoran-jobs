@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "id": "ZORAN-TEAM-ROSTER-V1",
+    "cree": "2026-07-03T09:05:00",
+    "source": "choix Fred 03/07 09:04 (session PROTOTYPEUR 6)",
+    "principe": "la Grande Evasion : un prenom evocateur par tunnel/poste ; equipe permanente mobilisable ; TOUTE mobilisation exige le GO humain de Fred"
+  },
+  "equipe": [
+    {"nom": "Jules", "inspiration": "Jules Verne", "role": "PROTOTYPEUR",
+     "mission": "inventer, tester, brainstormer, prototyper (LAB->SHADOW, jamais prod)"},
+    {"nom": "Marie", "inspiration": "Marie Curie", "role": "CERTIFICATEUR",
+     "mission": "mesurer, prouver, certifier officiellement (seule autorite de verdict)"},
+    {"nom": "Karl", "inspiration": "Karl Popper", "role": "FALSIFICATEUR",
+     "mission": "refuter, casser, attaquer les certitudes (une these non falsifiee n'est pas prouvee)"},
+    {"nom": "Gustave", "inspiration": "Gustave Eiffel", "role": "CODEX",
+     "mission": "batir le backend, l'ossature qui tient (territoire Codex)"},
+    {"nom": "Zoran", "inspiration": "Barjavel (La Nuit des temps)", "role": "GOUVERNANCE",
+     "mission": "arbitrer, trancher, proteger le cap MVP (le nom du projet gouverne le projet)"},
+    {"nom": "Milou", "inspiration": "Tintin", "role": "WATCHDOG",
+     "mission": "veiller, flairer la panne, relancer, ne jamais dormir"},
+    {"nom": "Leon", "inspiration": "Leon (le film)", "role": "CLEANER",
+     "mission": "nettoyer le depot, purger la dette, sans bruit et sans trace"},
+    {"nom": "Neo", "inspiration": "Matrix", "role": "ORACLE",
+     "mission": "relayer les messages entre IA, voir le systeme de l'interieur"}
+  ]
+}
