@@ -320,6 +320,88 @@ def _etat_role(role: str, entry: dict, live: dict, projet: str = DEFAULT_PROJET)
     return "⚫ la %d silencieuse (signe il y a %d min)" % (num, seen)
 
 
+def _signaux(state: dict) -> dict[str, str]:
+    """Detecteur d'utilite PAR ROLE, branche sur les MESURES existantes.
+    Regle absolue : un chiffre affiche = un chiffre LU quelque part (source citee) ;
+    jamais de % invente — sinon 'gain ⚪ NON_MESURE (mesure avant/apres a la mission)'."""
+    s: dict[str, str] = {}
+    dcc = state.get("dcc") or {}
+    nm = "gain ⚪ NON_MESURE (mesure avant/apres a la mission)"
+    # JULES — chantiers stagnants (>24 h sans date lue) dans les onglets
+    stag = [it for it in state.get("items", [])
+            if it.get("last_seen") and (_now() - it["last_seen"]).total_seconds() > STAGNANT_H * 3600]
+    if stag:
+        s["PROTOTYPEUR"] = ("%d chantier(s) STAGNANT >24 h (onglets) — relancer/tuer ; %s"
+                            % (len(stag), nm))
+    # MARIE — backlog de preuves a certifier
+    try:
+        st = json.loads((ROOT / "frontend" / "UI_OBJECT_COMPLETENESS_STATUS_5176.json")
+                        .read_text(encoding="utf-8"))
+        missing = (st.get("counts") or {}).get("action_proof_missing")
+        if missing:
+            s["CERTIFICATEUR"] = ("%s preuves d'action manquantes (guard completude) — "
+                                  "gain max mesurable : %s objets debloques" % (missing, missing))
+    except Exception:
+        pass
+    # KARL — verdicts jamais contre-attaques (absence MESUREE de ledger falsification)
+    try:
+        led = (ROOT / "claude_outbox" / "CERTIFICATION_CONTINUOUS_LEDGER.jsonl")
+        last = json.loads(led.read_text(encoding="utf-8").splitlines()[-1])
+        falsif = ROOT / "claude_outbox" / "FALSIFICATION_LEDGER.jsonl"
+        if last.get("confirmed") and not falsif.is_file():
+            s["FALSIFICATEUR"] = ("%d verdicts CONFIRMED sans AUCUNE passe adverse enregistree "
+                                  "(aucun ledger falsification) ; %s" % (last["confirmed"], nm))
+    except Exception:
+        pass
+    # GUSTAVE — le goulot dcc pointe Codex
+    if "codex" in str(dcc.get("verrou_resp", "")).lower():
+        s["CODEX"] = ("le goulot dcc l'attend : %s (responsable %s) ; %s"
+                      % (dcc.get("verrou", "?"), dcc.get("verrou_resp", "?"), nm))
+    # ZORAN — conflit non arbitre / intervention requise
+    if "CONFLIT" in str(dcc.get("verrou_resp", "")) or dcc.get("intervention_requise"):
+        s["GOUVERNANCE"] = ("arbitrage attendu : %s (dcc intervention_requise=%s) ; %s"
+                            % (dcc.get("prochaine_action", "?"),
+                               dcc.get("intervention_requise"), nm))
+    # MILOU — verdicts non-OK du watchdog dans les dernieres 24 h
+    try:
+        wd = (ROOT / "clipbridge_v2" / "data" / "_passive_watchdog_report.jsonl")
+        cutoff = _now() - datetime.timedelta(hours=24)
+        bad = 0
+        # verdicts DURS seulement : VIVANT_MAIS_STAGNANT = normal journalise en E1
+        # (decision Fred 02/07, zero trafic attendu) — le compter serait crier au loup
+        for line in wd.read_text(encoding="utf-8").splitlines():
+            try:
+                e = json.loads(line)
+                if e.get("verdict") not in (None, "OK", "VIVANT_MAIS_STAGNANT") and \
+                        datetime.datetime.fromisoformat(e["iso"]) >= cutoff:
+                    bad += 1
+            except Exception:
+                pass
+        if bad:
+            s["WATCHDOG"] = ("%d verdict(s) DUR(s) en 24 h (watchdog passif : mort/port) — "
+                             "surveiller la surveillance ; %s" % (bad, nm))
+    except Exception:
+        pass
+    # LEON — dette au compteur reel du snapshot
+    try:
+        snap = json.loads((ROOT / "observatory" / "out" / "snapshot.json")
+                          .read_text(encoding="utf-8"))
+        debt = ((snap.get("product_health") or {}).get("debt") or {}).get("total")
+        if debt:
+            s["CLEANER"] = ("%s dettes au compteur reel (snapshot) — "
+                            "gain max mesurable : -%s dettes" % (
+                                f"{int(debt):,}".replace(",", " "),
+                                f"{int(debt):,}".replace(",", " ")))
+    except Exception:
+        pass
+    # NEO — boites MAILBOX silencieuses depuis longtemps
+    silent = [n for n, m in _sessions_live().items() if m is not None and m > 600]
+    if silent:
+        s["ORACLE"] = ("%d boite(s) silencieuse(s) >10 h (%s) — relayer/reveiller ; %s"
+                       % (len(silent), ", ".join(sorted(silent)), nm))
+    return s
+
+
 def render_sessions(state: dict) -> str:
     """Le "Hello Fred" du boot : l'EQUIPE (prenoms choisis par Fred, facon Grande
     Evasion), etat mesure, compteurs continus, mobilisations en attente de GO."""
@@ -340,6 +422,7 @@ def render_sessions(state: dict) -> str:
                     m.get("demandeur", "?"), m["id"]))
     if attente:
         L.append("")
+    signaux = _signaux(state)
     n = 0
     if roster:
         for membre in roster:
@@ -355,6 +438,9 @@ def render_sessions(state: dict) -> str:
                          % (n, membre["nom"], nxt, tag, membre["role"].title(),
                             membre["inspiration"],
                             _etat_role(role, entry, live, projet)))
+                L.append("   _(a quoi sert %s : %s)_" % (membre["nom"], membre["mission"]))
+                if projet == DEFAULT_PROJET and role in signaux:
+                    L.append("   💡 utile MAINTENANT : %s" % signaux[role])
     else:  # pas de roster : retomber sur le registre brut (jamais ecran vide)
         for (role, projet), entry in sorted(reg.items()):
             n += 1

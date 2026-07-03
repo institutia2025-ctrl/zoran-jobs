@@ -225,6 +225,42 @@ def test_menu_equipe_affiche_prenoms(tmp_path, monkeypatch):
     assert "jamais lancee" in out
 
 
+def test_signaux_chiffres_lus_jamais_inventes(tmp_path, monkeypatch):
+    # un chiffre affiche = un chiffre LU dans un fichier ; sans compteur -> NON_MESURE
+    monkeypatch.setattr(session_menu, "ROOT", tmp_path)
+    monkeypatch.setattr(session_menu, "_sessions_live", lambda: {})
+    (tmp_path / "frontend").mkdir()
+    (tmp_path / "frontend" / "UI_OBJECT_COMPLETENESS_STATUS_5176.json").write_text(
+        json.dumps({"counts": {"action_proof_missing": 861}}), encoding="utf-8")
+    s = session_menu._signaux({"dcc": {}, "items": []})
+    assert "861" in s["CERTIFICATEUR"]           # chiffre LU (source guard)
+    assert "gain max mesurable : 861" in s["CERTIFICATEUR"]
+    # dcc en conflit -> Zoran sollicite, gain honnetement NON_MESURE
+    s2 = session_menu._signaux({"dcc": {"verrou_resp": "CONFLIT: a vs b",
+                                        "intervention_requise": True,
+                                        "prochaine_action": "arbitrer"}, "items": []})
+    assert "NON_MESURE" in s2["GOUVERNANCE"]
+    # aucune source -> aucun signal (pas de suggestion inventee)
+    assert "CLEANER" not in s
+    assert "WATCHDOG" not in s
+
+
+def test_signaux_watchdog_ignore_stagnant_normal(tmp_path, monkeypatch):
+    import datetime as dt
+    monkeypatch.setattr(session_menu, "ROOT", tmp_path)
+    monkeypatch.setattr(session_menu, "_sessions_live", lambda: {})
+    wd = tmp_path / "clipbridge_v2" / "data"
+    wd.mkdir(parents=True)
+    now = dt.datetime.now().isoformat()
+    (wd / "_passive_watchdog_report.jsonl").write_text("\n".join([
+        json.dumps({"iso": now, "verdict": "VIVANT_MAIS_STAGNANT"}),
+        json.dumps({"iso": now, "verdict": "VIVANT_MAIS_STAGNANT"}),
+        json.dumps({"iso": now, "verdict": "SUPERVISEUR_MORT"}),
+    ]), encoding="utf-8")
+    s = session_menu._signaux({"dcc": {}, "items": []})
+    assert "1 verdict(s) DUR" in s["WATCHDOG"]   # le STAGNANT normal ne crie pas au loup
+
+
 def test_bootstrap_cite_ses_sources(tmp_path, monkeypatch):
     p = tmp_path / "T.md"
     p.write_text("## 🔴 EN COURS\n- **Chantier X** : prochaine action = faire Y.",
